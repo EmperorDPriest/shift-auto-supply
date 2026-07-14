@@ -1,0 +1,841 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>Shift Auto Supply — Premium BMW & Auto Parts | Global Shipping</title>
+  <meta name="description" content="Shop genuine and quality-tested BMW and auto parts at Shift Auto Supply. Fast global shipping, verified parts, trusted by enthusiasts worldwide.">
+  <meta name="keywords" content="BMW parts, auto parts, performance parts, brake pads, suspension, engine parts, global shipping">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Shift Auto Supply — Premium Auto Parts">
+  <meta property="og:description" content="Genuine and quality-tested BMW parts with global shipping. Trusted by enthusiasts worldwide.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/og-image.jpg">
+
+  <!-- Schema.org -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "AutoPartsStore",
+    "name": "Shift Auto Supply",
+    "description": "Premium BMW and auto parts supplier with global shipping",
+    "url": "https://shiftautosupply.com",
+    "telephone": "+1-800-SHIFT-AUTO",
+    "address": {
+      "@type": "PostalAddress",
+      "addressCountry": "US"
+    },
+    "priceRange": "$$",
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Auto Parts Catalog"
+    }
+  }
+  </script>
+
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages/home.css">
+  <!-- Swiper -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+
+  <!-- ENV Config (replace on deployment) -->
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+
+<!-- ── Announcement Bar ──────────────────────────────── -->
+<div class="announcement-bar" id="announcementBar">
+  <strong>Global Shipping Available</strong> — Genuine BMW &amp; performance parts shipped worldwide.
+  <a href="/pages/shipping-policy.html">Learn more</a>
+  <button class="announcement-close" onclick="document.getElementById('announcementBar').style.display='none'" aria-label="Close">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+  </button>
+</div>
+
+<!-- ── Header ─────────────────────────────────────────── -->
+<header class="header" id="mainHeader">
+  <div class="header-inner">
+
+    <!-- Mobile Menu -->
+    <button class="mobile-nav-btn" aria-label="Menu" onclick="SAS.openDrawer('mobileMenuDrawer')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+
+    <!-- Logo -->
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+          <path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/>
+        </svg>
+      </div>
+      <div class="site-logo-name">
+        <span class="brand">Shift Auto</span>
+        <span class="tagline">Supply Co.</span>
+      </div>
+    </a>
+
+    <!-- Search -->
+    <div class="header-search" id="headerSearch">
+      <input type="search" id="headerSearchInput" placeholder="Search parts, SKU, model..." autocomplete="off" aria-label="Search parts">
+      <button class="header-search-btn" aria-label="Search">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+      <div class="search-suggestions" id="searchSuggestions" style="display:none"></div>
+    </div>
+
+    <!-- Actions -->
+    <div class="header-actions">
+      <!-- Theme toggle -->
+      <button class="theme-toggle" aria-label="Toggle dark mode" title="Toggle dark mode"></button>
+
+      <!-- Search (mobile) -->
+      <button class="header-btn show-sm" onclick="SAS.openDrawer('searchDrawer')" aria-label="Search">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+
+      <!-- Account -->
+      <div style="position:relative">
+        <a href="/pages/dashboard.html" class="header-btn" data-auth-show style="display:none" title="My Account">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+        <a href="/pages/login.html" class="header-btn" data-guest-show title="Sign In">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+        </a>
+      </div>
+
+      <!-- Cart -->
+      <button class="header-btn" onclick="SAS.openDrawer('cartDrawer')" aria-label="Cart" title="Cart">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" data-cart-count>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Navigation ─────────────────────────────────────── -->
+<nav class="nav" aria-label="Main navigation">
+  <div class="nav-inner">
+    <a href="/" class="nav-link active">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+      Home
+    </a>
+    <div class="nav-dropdown">
+      <a href="/pages/shop.html" class="nav-link">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        Shop Parts
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+      </a>
+      <div class="dropdown-menu">
+        <a href="/pages/shop.html?category=engine" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+          Engine Parts
+        </a>
+        <a href="/pages/shop.html?category=brakes" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+          Brake System
+        </a>
+        <a href="/pages/shop.html?category=suspension" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          Suspension
+        </a>
+        <a href="/pages/shop.html?category=electrical" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+          Electrical
+        </a>
+        <a href="/pages/shop.html?category=wheels" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>
+          Wheels &amp; Tires
+        </a>
+        <a href="/pages/shop.html?category=exterior" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Exterior
+        </a>
+        <a href="/pages/shop.html?category=interior" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+          Interior
+        </a>
+        <a href="/pages/shop.html?category=fluids" class="dropdown-item">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+          Oil &amp; Fluids
+        </a>
+      </div>
+    </div>
+    <a href="/pages/bmw-finder.html" class="nav-link">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
+      BMW Finder
+      <span class="badge badge-blue">BMW</span>
+    </a>
+
+    <a href="/pages/about.html" class="nav-link">About</a>
+    <a href="/pages/contact.html" class="nav-link">Contact</a>
+    <a href="/pages/admin/index.html" class="nav-link" data-admin-show style="display:none">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
+      Admin
+    </a>
+  </div>
+</nav>
+
+<!-- ── Hero Slider ────────────────────────────────────── -->
+<section class="hero-section">
+  <div class="swiper hero-swiper">
+    <div class="swiper-wrapper">
+
+      <!-- Slide 1 -->
+      <div class="swiper-slide">
+        <div class="hero-slide hero-slide-1">
+          <div class="hero-slide-overlay"></div>
+          <div class="container hero-slide-content">
+            <div class="hero-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+              BMW Specialist — Est. 2019
+            </div>
+            <h1>Performance Parts.<br><span class="hero-accent">Precision Engineered.</span></h1>
+            <p>Genuine and quality-tested BMW parts shipped globally. Every component vetted by automotive professionals.</p>
+            <div class="hero-actions">
+              <a href="/pages/shop.html" class="btn btn-primary btn-lg">
+                <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+                Shop Now
+              </a>
+              <a href="/pages/bmw-finder.html" class="btn btn-outline hero-finder-btn">
+                Find Parts by Model
+              </a>
+            </div>
+            <div class="hero-stats">
+              <div class="hero-stat"><span class="num">5,000+</span><span class="label">Parts Available</span></div>
+              <div class="hero-stat"><span class="num">98%</span><span class="label">Satisfaction Rate</span></div>
+              <div class="hero-stat"><span class="num">50+</span><span class="label">Countries Served</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 2 -->
+      <div class="swiper-slide">
+        <div class="hero-slide hero-slide-2">
+          <div class="hero-slide-overlay"></div>
+          <div class="container hero-slide-content">
+            <div class="hero-badge" style="background:rgba(224,36,36,0.15);border-color:rgba(224,36,36,0.4);color:#F87171">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+              M Performance &amp; Sport
+            </div>
+            <h1>Brake Systems<br><span class="hero-accent">That Stop On Command</span></h1>
+            <p>M-Sport brake kits, performance rotors, and high-temp brake pads for every BMW model from 1 Series to M8.</p>
+            <div class="hero-actions">
+              <a href="/pages/shop.html?category=brakes" class="btn btn-primary btn-lg">Shop Brake Parts</a>
+              <a href="/pages/order-tracking.html" class="btn btn-outline hero-finder-btn">Track My Order</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 3 -->
+      <div class="swiper-slide">
+        <div class="hero-slide hero-slide-3">
+          <div class="hero-slide-overlay"></div>
+          <div class="container hero-slide-content">
+            <div class="hero-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+              Global Delivery Network
+            </div>
+            <h1>Ships to<br><span class="hero-accent">50+ Countries</span></h1>
+            <p>We ship worldwide — after your payment is confirmed, your order is carefully packaged and dispatched to your door.</p>
+            <div class="hero-actions">
+              <a href="/pages/shipping-policy.html" class="btn btn-primary btn-lg">Shipping Info</a>
+              <a href="/pages/contact.html" class="btn btn-outline hero-finder-btn">Contact Us</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Slide 4 -->
+      <div class="swiper-slide">
+        <div class="hero-slide hero-slide-4">
+          <div class="hero-slide-overlay"></div>
+          <div class="container hero-slide-content">
+            <div class="hero-badge">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+              Secure &amp; Verified
+            </div>
+            <h1>Every Order<br><span class="hero-accent">Personally Verified</span></h1>
+            <p>No automated payment risks. Every transaction personally reviewed by our team before shipment preparation begins.</p>
+            <div class="hero-actions">
+              <a href="/pages/faq.html" class="btn btn-primary btn-lg">How It Works</a>
+              <a href="/pages/shop.html" class="btn btn-outline hero-finder-btn">Browse Catalog</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /swiper-wrapper -->
+
+    <!-- Pagination -->
+    <div class="swiper-pagination"></div>
+
+    <!-- Navigation -->
+    <div class="swiper-button-prev"></div>
+    <div class="swiper-button-next"></div>
+  </div>
+
+  <!-- Hero Search Bar (mobile) -->
+  <div class="hero-search-mobile">
+    <div class="container">
+      <div style="position:relative">
+        <input type="search" class="form-input" placeholder="Search parts, brand, model..." id="heroSearchMobile" style="height:48px; padding-right:52px; border-radius:var(--radius-full)">
+        <button class="header-search-btn" style="top:50%; right:8px; transform:translateY(-50%); position:absolute; width:36px; height:36px;" aria-label="Search">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Quick Category Access ─────────────────────────── -->
+<section class="section-sm" style="background:var(--bg-elevated); border-bottom:1px solid var(--border)">
+  <div class="container">
+    <div class="quick-cats" id="quickCategories">
+      <!-- Populated by JS -->
+      <a href="/pages/shop.html?category=engine" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="7" width="20" height="14" rx="2"/><path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2"/><line x1="12" y1="12" x2="12" y2="16"/><line x1="10" y1="14" x2="14" y2="14"/></svg>
+        Engine
+      </a>
+      <a href="/pages/shop.html?category=brakes" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/></svg>
+        Brakes
+      </a>
+      <a href="/pages/shop.html?category=suspension" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><line x1="12" y1="2" x2="12" y2="22"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+        Suspension
+      </a>
+      <a href="/pages/shop.html?category=electrical" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>
+        Electrical
+      </a>
+      <a href="/pages/shop.html?category=wheels" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="3"/><line x1="12" y1="2" x2="12" y2="9"/><line x1="12" y1="15" x2="12" y2="22"/><line x1="2" y1="12" x2="9" y2="12"/><line x1="15" y1="12" x2="22" y2="12"/></svg>
+        Wheels
+      </a>
+      <a href="/pages/shop.html?category=interior" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M16 2v4"/><path d="M8 2v4"/></svg>
+        Interior
+      </a>
+      <a href="/pages/shop.html?category=exterior" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M1 3h15v13H1z"/><path d="M16 8h4l3 3v5h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        Exterior
+      </a>
+      <a href="/pages/shop.html?category=fluids" class="quick-cat">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/></svg>
+        Fluids
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── BMW Quick Finder ───────────────────────────────── -->
+<section class="section-sm">
+  <div class="container">
+    <div class="bmw-finder" id="bmwFinder">
+      <div class="bmw-finder-badge">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        Part Finder
+      </div>
+      <h2>Find the Right Part for Your Vehicle</h2>
+      <p>Select your model, year, and engine to instantly find compatible parts from our catalog.</p>
+      <form class="bmw-finder-form" id="finderForm" onsubmit="handleFinderSubmit(event)">
+        <select class="bmw-finder-select" id="finderBrand" onchange="updateFinderModels()" required>
+          <option value="">Select Brand</option>
+          <option value="BMW">BMW</option>
+          <option value="Toyota">Toyota</option>
+          <option value="Mercedes">Mercedes</option>
+          <option value="Honda">Honda</option>
+          <option value="Ford">Ford</option>
+          <option value="Chevrolet">Chevrolet</option>
+          <option value="Nissan">Nissan</option>
+          <option value="Hyundai">Hyundai</option>
+        </select>
+        <select class="bmw-finder-select" id="finderModel" required>
+          <option value="">Select Model</option>
+        </select>
+        <select class="bmw-finder-select" id="finderYear" required>
+          <option value="">Select Year</option>
+        </select>
+        <button type="submit" class="btn btn-primary" style="height:48px; white-space:nowrap">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Find Parts
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Featured Products ─────────────────────────────── -->
+<section class="section">
+  <div class="container">
+    <div class="section-header flex items-center justify-between flex-wrap gap-4">
+      <div>
+        <div class="section-label">Catalog</div>
+        <h2>Featured Parts</h2>
+        <p>Hand-selected, quality-verified components ready to ship</p>
+      </div>
+      <a href="/pages/shop.html" class="btn btn-outline btn-sm">
+        View All Parts
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </a>
+    </div>
+    <div class="product-grid" id="featuredProducts">
+      <!-- Skeleton loaders -->
+      ${Array(8).fill(`
+        <div class="product-card" style="pointer-events:none">
+          <div class="product-card-img skeleton" style="aspect-ratio:1"></div>
+          <div class="product-card-body" style="gap:10px">
+            <div class="skeleton" style="height:10px; width:60%; border-radius:4px"></div>
+            <div class="skeleton" style="height:14px; width:90%; border-radius:4px"></div>
+            <div class="skeleton" style="height:14px; width:70%; border-radius:4px"></div>
+          </div>
+          <div class="product-card-footer" style="padding-top:12px">
+            <div class="skeleton" style="height:22px; width:70px; border-radius:4px"></div>
+            <div class="skeleton" style="height:36px; width:36px; border-radius:8px"></div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  </div>
+</section>
+
+<!-- ── Trust Section ─────────────────────────────────── -->
+<section class="section-sm trust-section">
+  <div class="container">
+    <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto var(--space-10)">
+      <div class="section-label" style="justify-content:center">Why Choose Us</div>
+      <h2>Built on Trust, Driven by Quality</h2>
+      <p>Every order is handled with personal attention. No automation shortcuts that put your purchase at risk.</p>
+    </div>
+    <div class="trust-badges">
+      <div class="trust-badge">
+        <div class="trust-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        </div>
+        <div class="trust-badge-text">
+          <h4>International Shipping</h4>
+          <p>Delivered to 50+ countries via our trusted global carrier network</p>
+        </div>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="trust-badge-text">
+          <h4>Manual Payment Verification</h4>
+          <p>Every payment reviewed by a real person before your order ships</p>
+        </div>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        </div>
+        <div class="trust-badge-text">
+          <h4>Genuine &amp; Quality Parts</h4>
+          <p>OEM and quality-tested parts verified by automotive professionals</p>
+        </div>
+      </div>
+      <div class="trust-badge">
+        <div class="trust-badge-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        </div>
+        <div class="trust-badge-text">
+          <h4>Fast Support Response</h4>
+          <p>Real humans answer your questions — typically within 2–4 hours</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Customer Reviews ───────────────────────────────── -->
+<section class="section" style="background: var(--bg-elevated)">
+  <div class="container">
+    <div class="section-header" style="text-align:center; max-width:600px; margin:0 auto var(--space-10)">
+      <div class="section-label" style="justify-content:center">Testimonials</div>
+      <h2>What Our Customers Say</h2>
+      <p>Trusted by enthusiasts and mechanics around the world</p>
+    </div>
+
+    <div class="reviews-swiper-wrap">
+      <div class="swiper reviews-swiper">
+        <div class="swiper-wrapper" id="reviewsContainer">
+          <!-- Reviews loaded by JS or static fallback below -->
+          <div class="swiper-slide">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-author">
+                  <div class="review-avatar">M</div>
+                  <div>
+                    <div class="review-author-name">Michael T.</div>
+                    <div class="review-author-date">Feb 2025 &bull; BMW 3 Series Owner</div>
+                  </div>
+                </div>
+                <div class="stars">
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+              </div>
+              <div class="review-title">Exactly what my E46 needed</div>
+              <div class="review-body">Ordered brake pads and rotors. Payment verification was quick, and shipping to Germany was smooth. Everything fits perfectly. Will absolutely order again.</div>
+              <div class="review-verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified Purchase
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-author">
+                  <div class="review-avatar" style="background:var(--crimson-50);color:var(--crimson)">S</div>
+                  <div>
+                    <div class="review-author-name">Sarah K.</div>
+                    <div class="review-author-date">Mar 2025 &bull; BMW M3 Owner</div>
+                  </div>
+                </div>
+                <div class="stars">
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+              </div>
+              <div class="review-title">Premium quality, fast shipping</div>
+              <div class="review-body">The suspension components I received were OEM quality. The manual payment process felt very professional — they kept me updated every step of the way.</div>
+              <div class="review-verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified Purchase
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-author">
+                  <div class="review-avatar" style="background:#E8F5E9;color:#2E7D32">J</div>
+                  <div>
+                    <div class="review-author-name">James R.</div>
+                    <div class="review-author-date">Jan 2025 &bull; BMW 5 Series Owner</div>
+                  </div>
+                </div>
+                <div class="stars">
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+              </div>
+              <div class="review-title">Found parts I couldn't source locally</div>
+              <div class="review-body">They had the exact F10 steering components I needed. Shipped to Nigeria without issues. Communication was excellent throughout. Highly recommend.</div>
+              <div class="review-verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified Purchase
+              </div>
+            </div>
+          </div>
+          <div class="swiper-slide">
+            <div class="review-card">
+              <div class="review-header">
+                <div class="review-author">
+                  <div class="review-avatar" style="background:#EDE9FE;color:#7C3AED">A</div>
+                  <div>
+                    <div class="review-author-name">Ahmed L.</div>
+                    <div class="review-author-date">Apr 2025 &bull; BMW X5 Owner</div>
+                  </div>
+                </div>
+                <div class="stars">
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                  <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+                </div>
+              </div>
+              <div class="review-title">Trusted supplier for my workshop</div>
+              <div class="review-body">I run an auto workshop and Shift Auto Supply is now my go-to for BMW parts. Consistent quality, reliable shipping, and transparent process every time.</div>
+              <div class="review-verified">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+                Verified Purchase
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="swiper-pagination reviews-pagination"></div>
+      </div>
+    </div>
+
+    <!-- Rating summary -->
+    <div class="rating-summary">
+      <div class="rating-overall">
+        <div class="rating-number">4.9</div>
+        <div class="stars large-stars">
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+          <svg class="star" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="currentColor" stroke="currentColor" stroke-width="1.5"/></svg>
+        </div>
+        <div class="rating-count">Based on 248 reviews</div>
+      </div>
+      <div class="rating-bars">
+        <div class="rating-bar-row"><span>5 stars</span><div class="rating-bar"><div style="width:88%"></div></div><span>88%</span></div>
+        <div class="rating-bar-row"><span>4 stars</span><div class="rating-bar"><div style="width:8%"></div></div><span>8%</span></div>
+        <div class="rating-bar-row"><span>3 stars</span><div class="rating-bar"><div style="width:3%"></div></div><span>3%</span></div>
+        <div class="rating-bar-row"><span>2 stars</span><div class="rating-bar"><div style="width:1%"></div></div><span>1%</span></div>
+        <div class="rating-bar-row"><span>1 star</span> <div class="rating-bar"><div style="width:0%"></div></div><span>0%</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Partner / Shipping Partner ────────────────────── -->
+<section class="section-sm partner-section">
+  <div class="container">
+    <p class="partner-label">Trusted By</p>
+    <div class="partner-strip" style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap">
+      <div class="partner-card" style="cursor:default;max-width:260px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:var(--text-primary)">Parts Connect International</div>
+          <div style="font-size:12px;color:var(--text-muted)">Global B2B parts sourcing network</div>
+        </div>
+      </div>
+      <div class="partner-card" style="cursor:default;max-width:260px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:var(--text-primary)">MechPro Logistics</div>
+          <div style="font-size:12px;color:var(--text-muted)">Specialized household moving services</div>
+        </div>
+      </div>
+      <div class="partner-card" style="cursor:default;max-width:260px">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <div>
+          <div style="font-weight:700;font-size:14px;color:var(--text-primary)">AutoHub Network</div>
+          <div style="font-size:12px;color:var(--text-muted)">Connecting auto retailers worldwide</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── Newsletter / CTA Banner ───────────────────────── -->
+<section class="section cta-banner-section">
+  <div class="container">
+    <div class="cta-banner">
+      <div class="cta-banner-content">
+        <div class="section-label">Stay Updated</div>
+        <h2>Get Exclusive Deals &amp; New Arrivals</h2>
+        <p>Join thousands of BMW enthusiasts who trust Shift Auto Supply. Get early access to new stock and special offers.</p>
+      </div>
+      <form class="cta-form" onsubmit="handleNewsletterSubmit(event)">
+        <input type="email" class="form-input" placeholder="Your email address" required style="height:48px; border-radius:var(--radius-full)">
+        <button type="submit" class="btn btn-primary" style="height:48px; border-radius:var(--radius-full); white-space:nowrap">
+          Subscribe
+        </button>
+      </form>
+    </div>
+  </div>
+</section>
+
+<!-- ── Footer ─────────────────────────────────────────── -->
+<footer class="footer">
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="brand-name">Shift Auto Supply</div>
+        <p>Premium automotive parts for BMW and beyond. Trusted by enthusiasts and mechanics in 50+ countries. Every order personally verified.</p>
+        <div class="footer-badges">
+          <div class="footer-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Secure Orders
+          </div>
+          <div class="footer-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+            Global Shipping
+          </div>
+          <div class="footer-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            Verified Parts
+          </div>
+        </div>
+      </div>
+
+      <div class="footer-col">
+        <h4>Shop</h4>
+        <ul>
+          <li><a href="/pages/shop.html">All Parts</a></li>
+          <li><a href="/pages/shop.html?category=engine">Engine Parts</a></li>
+          <li><a href="/pages/shop.html?category=brakes">Brake System</a></li>
+          <li><a href="/pages/shop.html?category=suspension">Suspension</a></li>
+          <li><a href="/pages/shop.html?category=electrical">Electrical</a></li>
+          <li><a href="/pages/bmw-finder.html">BMW Part Finder</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Support</h4>
+        <ul>
+
+          <li><a href="/pages/faq.html">FAQ</a></li>
+          <li><a href="/pages/contact.html">Contact Us</a></li>
+          <li><a href="/pages/shipping-policy.html">Shipping Policy</a></li>
+          <li><a href="/pages/return-policy.html">Return Policy</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="/pages/about.html">About Us</a></li>
+          <li><a href="/pages/dashboard.html">My Account</a></li>
+          <li><a href="/pages/login.html">Sign In</a></li>
+          <li><a href="/pages/register.html">Create Account</a></li>
+          <li><a href="/pages/privacy-policy.html">Privacy Policy</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; <span id="currentYear"></span> Shift Auto Supply. All rights reserved.</p>
+      <div class="footer-bottom-links">
+        <a href="/pages/privacy-policy.html">Privacy</a>
+        <a href="/pages/shipping-policy.html">Shipping</a>
+        <a href="/pages/return-policy.html">Returns</a>
+        <a href="/pages/contact.html">Contact</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<!-- ── Drawer Overlay ─────────────────────────────────── -->
+<div class="drawer-overlay"></div>
+
+<!-- ── Cart Drawer ────────────────────────────────────── -->
+<div class="drawer" id="cartDrawer" role="dialog" aria-label="Shopping cart" aria-modal="true">
+  <div class="drawer-header">
+    <h3>
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="margin-right:8px;display:inline"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+      Cart <span style="color:var(--text-muted);font-weight:400;font-size:14px" data-cart-items-count>0 items</span>
+    </h3>
+    <button class="drawer-close" onclick="SAS.closeDrawer('cartDrawer')" aria-label="Close cart">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="cartDrawerItems">
+    <!-- Rendered by cart.js -->
+  </div>
+  <div class="drawer-footer">
+    <div id="cartDrawerSummary" style="margin-bottom:var(--space-4)">
+      <!-- Rendered by cart.js -->
+    </div>
+    <a href="/pages/checkout.html" class="btn btn-primary btn-full btn-lg" id="checkoutBtn">
+      Proceed to Checkout
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+    </a>
+    <button class="btn btn-ghost btn-full btn-sm" style="margin-top:var(--space-3)" onclick="SAS.closeDrawer('cartDrawer')">
+      Continue Shopping
+    </button>
+  </div>
+</div>
+
+<!-- ── Mobile Menu Drawer ─────────────────────────────── -->
+<div class="drawer left" id="mobileMenuDrawer" role="dialog" aria-label="Navigation" aria-modal="true">
+  <div class="drawer-header">
+    <h3>Menu</h3>
+    <button class="drawer-close" onclick="SAS.closeDrawer('mobileMenuDrawer')" aria-label="Close menu">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" style="padding:0">
+    <div class="mobile-menu-user" data-auth-show style="display:none; padding:var(--space-5) var(--space-6); background:var(--bg-elevated); border-bottom:1px solid var(--border)">
+      <div style="font-size:12px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;margin-bottom:4px;">Signed in as</div>
+      <div style="font-weight:700;" data-user-name></div>
+      <div style="font-size:13px;color:var(--text-muted)" data-user-email></div>
+    </div>
+    <nav style="padding:var(--space-3) 0">
+      <a href="/"                                class="mobile-menu-link">Home</a>
+      <a href="/pages/shop.html"                 class="mobile-menu-link">Shop All Parts</a>
+      <a href="/pages/shop.html?category=engine" class="mobile-menu-link mobile-sub">Engine Parts</a>
+      <a href="/pages/shop.html?category=brakes" class="mobile-menu-link mobile-sub">Brake System</a>
+      <a href="/pages/shop.html?category=suspension" class="mobile-menu-link mobile-sub">Suspension</a>
+      <a href="/pages/bmw-finder.html"           class="mobile-menu-link">BMW Finder</a>
+
+      <a href="/pages/about.html"                class="mobile-menu-link">About</a>
+      <a href="/pages/contact.html"              class="mobile-menu-link">Contact</a>
+      <a href="/pages/dashboard.html"            class="mobile-menu-link" data-auth-show style="display:none">My Account</a>
+      <a href="/pages/admin/index.html"          class="mobile-menu-link" data-admin-show style="display:none">Admin Dashboard</a>
+    </nav>
+  </div>
+  <div class="drawer-footer">
+    <a href="/pages/login.html"    class="btn btn-primary btn-full" data-guest-show>Sign In</a>
+    <button onclick="SAS.auth.logout()" class="btn btn-secondary btn-full" data-auth-show style="display:none">Sign Out</button>
+  </div>
+</div>
+
+<!-- ── Search Drawer (mobile) ─────────────────────────── -->
+<div class="drawer left" id="searchDrawer" style="width:100vw; max-width:100vw" role="dialog" aria-label="Search" aria-modal="true">
+  <div class="drawer-header">
+    <h3>Search Parts</h3>
+    <button class="drawer-close" onclick="SAS.closeDrawer('searchDrawer')" aria-label="Close search">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" style="padding:var(--space-4)">
+    <div style="position:relative; margin-bottom:var(--space-4)">
+      <input type="search" id="mobileSearchInput" class="form-input" placeholder="Search parts, SKU, VIN..." style="height:52px; padding-right:52px; border-radius:var(--radius-full)" autocomplete="off" autofocus>
+      <button class="header-search-btn" style="position:absolute;right:8px;top:50%;transform:translateY(-50%);width:38px;height:38px" onclick="doMobileSearch()">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+    <div id="mobileSearchResults"></div>
+    <div class="mobile-search-shortcuts">
+      <p style="font-size:12px;color:var(--text-muted);font-weight:600;text-transform:uppercase;letter-spacing:0.06em;margin-bottom:var(--space-3)">Popular Searches</p>
+      <div style="display:flex;flex-wrap:wrap;gap:8px">
+        <a href="/pages/shop.html?q=brake+pads"    class="search-shortcut">Brake Pads</a>
+        <a href="/pages/shop.html?q=oil+filter"    class="search-shortcut">Oil Filter</a>
+        <a href="/pages/shop.html?q=suspension"    class="search-shortcut">Suspension Kit</a>
+        <a href="/pages/shop.html?q=spark+plug"    class="search-shortcut">Spark Plugs</a>
+        <a href="/pages/shop.html?q=timing+belt"   class="search-shortcut">Timing Belt</a>
+        <a href="/pages/shop.html?q=wheel+bearing" class="search-shortcut">Wheel Bearing</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Floating Support Button ────────────────────────── -->
+<a href="/pages/contact.html" class="float-support" title="Get Support" aria-label="Contact support">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+</a>
+
+<!-- ── Sticky Mobile Cart Bar ─────────────────────────── -->
+<div class="sticky-cart-bar" style="display:none">
+  <button class="btn btn-secondary" style="flex-shrink:0" onclick="SAS.openDrawer('cartDrawer')">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+    Cart (<span data-cart-count>0</span>)
+  </button>
+  <a href="/pages/checkout.html" class="btn btn-primary flex-1">
+    Checkout — <span data-cart-total>$0.00</span>
+  </a>
+</div>
+
+<!-- ── Scripts ────────────────────────────────────────── -->
+<script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script src="/js/pages/home.js"></script>
+</body>
+</html>

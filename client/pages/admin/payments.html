@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Payment Methods — Admin — Shift Auto Supply</title>
+  <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages/admin.css">
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body class="admin-body">
+
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="admin-sidebar-header">
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="site-logo-name"><span class="brand" style="font-size:15px">Shift Auto</span><span class="tagline">Admin Panel</span></div>
+    </a>
+  </div>
+  <nav class="admin-nav">
+    <div class="admin-nav-section">Overview</div>
+    <a href="/pages/admin/index.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Catalog</div>
+    <a href="/pages/admin/products.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Products</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Orders</div>
+    <a href="/pages/admin/orders.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>All Orders</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Settings</div>
+    <a href="/pages/admin/payments.html" class="admin-nav-link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payment Methods</a>
+    <a href="/pages/admin/users.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <div class="admin-user-card">
+      <div class="admin-user-avatar">A</div>
+      <div><div style="font-size:13px;font-weight:700" data-user-name>Admin</div><div style="font-size:11px;color:var(--text-muted)" data-user-email></div></div>
+    </div>
+    <button onclick="SAS.auth.logout()" class="btn btn-ghost btn-sm" style="width:100%;margin-top:var(--space-3)">Sign Out</button>
+  </div>
+</aside>
+
+<button class="admin-sidebar-toggle" onclick="document.getElementById('adminSidebar').classList.toggle('mobile-open')">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1 class="admin-page-title">Payment Methods</h1>
+      <p class="admin-page-subtitle">Manage which payment methods customers can use and their account details</p>
+    </div>
+    <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+  </div>
+
+  <div class="alert alert-info" style="margin-bottom:var(--space-6)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    <div>Toggle <strong>Active</strong> to show a method to customers. Fill in account details and click <strong>Save Changes</strong> — details will be shown to customers after they place an order.</div>
+  </div>
+
+  <div id="paymentMethodsContainer" style="display:flex;flex-direction:column;gap:var(--space-5)">
+    <div class="skeleton" style="height:200px;border-radius:var(--radius-lg)"></div>
+    <div class="skeleton" style="height:200px;border-radius:var(--radius-lg)"></div>
+    <div class="skeleton" style="height:200px;border-radius:var(--radius-lg)"></div>
+  </div>
+</main>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+// Store methods data — keyed by ID for easy access
+let methodsData = {};
+
+async function loadMethods() {
+  const container = document.getElementById('paymentMethodsContainer');
+  try {
+    const res = await SAS.paymentsAPI.getMethodsAdmin();
+    const methods = res.data;
+
+    // Store in our data map
+    methods.forEach(m => { methodsData[m._id] = JSON.parse(JSON.stringify(m)); });
+
+    container.innerHTML = methods.map(m => buildMethodCard(m)).join('');
+  } catch (err) {
+    container.innerHTML = `<div class="alert alert-error"><div>Failed to load payment methods: ${err.message}</div></div>`;
+  }
+}
+
+function buildMethodCard(m) {
+  const isCC = m.name === 'creditcard';
+  return `
+    <div class="payment-admin-card" id="card_${m._id}">
+      <div class="payment-admin-header">
+        <div style="display:flex;align-items:center;gap:var(--space-3)">
+          <div style="width:44px;height:44px;background:var(--blue-50);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--blue)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+          </div>
+          <div>
+            <div style="font-weight:700;font-size:15px">${m.displayName}</div>
+            <div style="font-size:12px;color:var(--text-muted);text-transform:capitalize">${m.name}</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-4)">
+          <div style="display:flex;align-items:center;gap:var(--space-2)">
+            <span style="font-size:13px;color:var(--text-secondary)">Active</span>
+            <div class="toggle-switch ${m.isActive ? 'on' : ''}" id="active_${m._id}"
+              onclick="${isCC ? '' : `toggleField('${m._id}','isActive')`}"
+              style="${isCC ? 'opacity:.4;cursor:not-allowed' : 'cursor:pointer'}"
+              title="${isCC ? 'Credit card cannot be activated' : 'Toggle active'}">
+            </div>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-2)">
+            <span style="font-size:13px;color:var(--text-secondary)">Maintenance</span>
+            <div class="toggle-switch ${m.isMaintenanceMode ? 'on' : ''}" id="maint_${m._id}"
+              onclick="toggleField('${m._id}','isMaintenanceMode')"
+              style="cursor:pointer"
+              title="Toggle maintenance mode">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-admin-body" style="display:flex;flex-direction:column;gap:var(--space-5)">
+
+        <!-- Account Details -->
+        <div>
+          <div style="font-size:13px;font-weight:700;margin-bottom:var(--space-3);color:var(--text-primary)">Account Details</div>
+          <div id="details_${m._id}">
+            ${buildDetailRows(m._id, m.accountDetails || [])}
+          </div>
+          <button type="button" onclick="addDetailRow('${m._id}')" class="btn btn-ghost btn-sm" style="margin-top:var(--space-2)">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+            Add Field
+          </button>
+        </div>
+
+        <!-- Instructions -->
+        <div class="form-group">
+          <label class="form-label">Payment Instructions (shown to customer)</label>
+          <textarea id="instr_${m._id}" class="form-input" rows="2" style="font-size:13px;resize:vertical"
+            placeholder="e.g. Send payment via Zelle to the number below. Include your order number.">${m.instructions || ''}</textarea>
+        </div>
+
+        <!-- Maintenance Message -->
+        <div class="form-group">
+          <label class="form-label">Maintenance Message</label>
+          <input type="text" id="maintMsg_${m._id}" class="form-input" style="font-size:13px"
+            placeholder="Message shown when method is under maintenance"
+            value="${m.maintenanceMessage || ''}">
+        </div>
+
+        <button class="btn btn-primary btn-sm" onclick="saveMethod('${m._id}')">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+          Save Changes
+        </button>
+      </div>
+    </div>
+  `;
+}
+
+function buildDetailRows(methodId, details) {
+  if (!details.length) {
+    return `<div id="noDetails_${methodId}" style="font-size:13px;color:var(--text-muted);padding:var(--space-2) 0">No account details added yet. Click "Add Field" to add one.</div>`;
+  }
+  return details.map((d, i) => `
+    <div class="detail-row" id="detail_${methodId}_${i}" style="display:grid;grid-template-columns:1fr 1.5fr 32px;gap:var(--space-2);margin-bottom:var(--space-2);align-items:center">
+      <input type="text" class="form-input detail-label" placeholder="Label e.g. Zelle Phone" style="font-size:13px;height:36px" value="${d.label || ''}">
+      <input type="text" class="form-input detail-value" placeholder="Account value" style="font-size:13px;height:36px" value="${d.value || ''}">
+      <button onclick="removeDetailRow('${methodId}', ${i})" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--crimson);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);cursor:pointer;flex-shrink:0">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+  `).join('');
+}
+
+function addDetailRow(methodId) {
+  const container = document.getElementById(`details_${methodId}`);
+  // Remove "no details" placeholder if present
+  const noDetails = document.getElementById(`noDetails_${methodId}`);
+  if (noDetails) noDetails.remove();
+
+  const existingRows = container.querySelectorAll('.detail-row').length;
+  const div = document.createElement('div');
+  div.className = 'detail-row';
+  div.id = `detail_${methodId}_${existingRows}`;
+  div.style.cssText = 'display:grid;grid-template-columns:1fr 1.5fr 32px;gap:8px;margin-bottom:8px;align-items:center';
+  div.innerHTML = `
+    <input type="text" class="form-input detail-label" placeholder="Label e.g. Zelle Phone" style="font-size:13px;height:36px" value="">
+    <input type="text" class="form-input detail-value" placeholder="Account value" style="font-size:13px;height:36px" value="">
+    <button onclick="this.closest('.detail-row').remove()" style="width:32px;height:32px;display:flex;align-items:center;justify-content:center;color:var(--crimson);border:1px solid var(--border);border-radius:var(--radius-md);background:var(--bg-card);cursor:pointer;flex-shrink:0">
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+  `;
+  container.appendChild(div);
+}
+
+function removeDetailRow(methodId, idx) {
+  const row = document.getElementById(`detail_${methodId}_${idx}`);
+  if (row) row.remove();
+}
+
+function getDetailRowsData(methodId) {
+  const container = document.getElementById(`details_${methodId}`);
+  const rows = container.querySelectorAll('.detail-row');
+  const details = [];
+  rows.forEach(row => {
+    const label = row.querySelector('.detail-label')?.value?.trim();
+    const value = row.querySelector('.detail-value')?.value?.trim();
+    if (label || value) {
+      details.push({ label: label || '', value: value || '' });
+    }
+  });
+  return details;
+}
+
+function toggleField(methodId, field) {
+  const toggle = document.getElementById(field === 'isActive' ? `active_${methodId}` : `maint_${methodId}`);
+  if (!toggle) return;
+  const isOn = toggle.classList.contains('on');
+  toggle.classList.toggle('on', !isOn);
+}
+
+async function saveMethod(methodId) {
+  const btn = document.querySelector(`#card_${methodId} .btn-primary`);
+  if (btn) { btn.disabled = true; btn.textContent = 'Saving…'; }
+
+  // Read current toggle states from DOM
+  const isActive          = document.getElementById(`active_${methodId}`)?.classList.contains('on') || false;
+  const isMaintenanceMode = document.getElementById(`maint_${methodId}`)?.classList.contains('on') || false;
+  const instructions      = document.getElementById(`instr_${methodId}`)?.value?.trim() || '';
+  const maintenanceMessage= document.getElementById(`maintMsg_${methodId}`)?.value?.trim() || '';
+
+  // Read account details directly from the DOM inputs — no JS object intermediary
+  const accountDetails = getDetailRowsData(methodId);
+
+  try {
+    await SAS.paymentsAPI.updateMethod(methodId, {
+      isActive,
+      isMaintenanceMode,
+      instructions,
+      maintenanceMessage,
+      accountDetails,
+    });
+
+    SAS.toast.success('Payment method saved!');
+
+    // Reload from server to confirm saved state
+    await loadMethods();
+
+  } catch (err) {
+    SAS.toast.error(err.message || 'Failed to save');
+  } finally {
+    if (btn) { btn.disabled = false; btn.textContent = 'Save Changes'; }
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await new Promise(r => setTimeout(r, 300));
+  if (!SAS.auth.isAdmin) { window.location.href = '/pages/login.html'; return; }
+  loadMethods();
+});
+</script>
+</body>
+</html>

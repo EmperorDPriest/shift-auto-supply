@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>BMW Part Finder — Shift Auto Supply</title>
+  <meta name="description" content="Find the right BMW part for your vehicle. Filter by model, year, engine, and category to instantly see compatible parts.">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .finder-hero { background:linear-gradient(135deg,#0A0F1E 0%,#0d1b3e 50%,#1a2744 100%); padding:var(--space-12) 0; position:relative; overflow:hidden; }
+    .finder-hero::before { content:''; position:absolute; top:-20%; right:-10%; width:500px; height:500px; background:radial-gradient(circle,rgba(0,102,204,.18) 0%,transparent 70%); pointer-events:none; }
+    .finder-card { background:rgba(255,255,255,.04); backdrop-filter:blur(12px); border:1px solid rgba(255,255,255,.12); border-radius:var(--radius-xl); padding:var(--space-8); margin-top:var(--space-8); }
+    .finder-selects { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-4); }
+    .finder-select { padding:14px var(--space-4); background:rgba(255,255,255,.08); border:1.5px solid rgba(255,255,255,.15); border-radius:var(--radius-md); color:#fff; font-family:var(--font-body); font-size:15px; font-weight:500; outline:none; cursor:pointer; transition:border-color var(--transition-fast); appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='rgba(255,255,255,0.5)' stroke-width='2'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right 14px center; padding-right:36px; }
+    .finder-select:focus { border-color:var(--blue-light); }
+    .finder-select option { background:#1a2744; color:#fff; }
+    .finder-stats { display:flex; gap:var(--space-8); margin-top:var(--space-6); }
+    .finder-stat span { display:block; }
+    .finder-stat .num { font-size:28px; font-weight:800; color:#7BB5F0; font-family:var(--font-head); }
+    .finder-stat .label { font-size:12px; color:rgba(255,255,255,.5); text-transform:uppercase; letter-spacing:.06em; margin-top:2px; }
+    .results-section { padding:var(--space-10) 0 var(--space-20); }
+    .results-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:var(--space-6); flex-wrap:wrap; gap:var(--space-3); }
+    .vehicle-tag { display:inline-flex; align-items:center; gap:var(--space-2); padding:6px 14px; background:var(--blue-50); border:1px solid var(--blue-100); border-radius:var(--radius-full); font-size:13px; font-weight:700; color:var(--blue-dark); }
+    .finder-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:var(--space-5); }
+    .category-quick-filter { display:flex; gap:var(--space-2); flex-wrap:wrap; margin-bottom:var(--space-6); }
+    .cat-filter-btn { padding:7px 16px; border:1.5px solid var(--border); border-radius:var(--radius-full); font-size:13px; font-weight:600; color:var(--text-secondary); cursor:pointer; transition:all var(--transition-fast); background:var(--bg-card); }
+    .cat-filter-btn:hover { border-color:var(--blue); color:var(--blue); }
+    .cat-filter-btn.active { background:var(--blue); border-color:var(--blue); color:#fff; }
+    .no-results { text-align:center; padding:80px 20px; color:var(--text-muted); }
+    .no-results svg { margin:0 auto 20px; display:block; opacity:.3; }
+    @media(max-width:900px){ .finder-selects{grid-template-columns:1fr 1fr;} }
+    @media(max-width:640px){ .finder-selects{grid-template-columns:1fr;} .finder-stats{gap:var(--space-5);} .finder-grid{grid-template-columns:1fr 1fr;} }
+  </style>
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+
+<header class="header">
+  <div class="header-inner">
+    <button class="mobile-nav-btn" onclick="SAS.openDrawer('mobileMenuDrawer')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div>
+    </a>
+    <div class="header-search">
+      <input type="search" id="headerSearchInput" placeholder="Search parts, SKU..." autocomplete="off" onkeydown="if(event.key==='Enter')window.location.href='/pages/shop.html?q='+this.value">
+      <button class="header-search-btn" onclick="window.location.href='/pages/shop.html?q='+document.getElementById('headerSearchInput').value">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+      <a href="/pages/dashboard.html" class="header-btn" data-auth-show style="display:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a href="/pages/login.html" class="header-btn" data-guest-show><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <button class="header-btn" onclick="SAS.openDrawer('cartDrawer')">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" data-cart-count>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<!-- Finder Hero -->
+<section class="finder-hero">
+  <div class="container">
+    <nav class="breadcrumb" style="margin-bottom:var(--space-5)">
+      <a href="/" style="color:rgba(255,255,255,.5)">Home</a>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="rgba(255,255,255,.5)" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+      <span style="color:rgba(255,255,255,.8)">Part Finder</span>
+    </nav>
+
+    <div class="section-label" style="color:rgba(0,150,255,.7)">Vehicle Part Finder</div>
+    <h1 style="font-size:clamp(28px,5vw,48px);font-weight:800;color:#fff;letter-spacing:-0.03em;line-height:1.1;margin-bottom:var(--space-3)">
+      Find Parts for<br><span style="color:#7BB5F0">Your Exact Vehicle</span>
+    </h1>
+    <p style="font-size:16px;color:rgba(255,255,255,.65);max-width:480px;line-height:1.7">Select your brand, model, year, and part category — we'll show you every compatible part in stock.</p>
+
+    <div class="finder-card">
+      <div class="finder-selects">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)">Vehicle Brand</label>
+          <select class="finder-select" id="finderBrand" onchange="onBrandChange()">
+            <option value="">Select Brand</option>
+            <option value="BMW" selected>BMW</option>
+            <option value="Toyota">Toyota</option>
+            <option value="Mercedes">Mercedes</option>
+            <option value="Honda">Honda</option>
+            <option value="Ford">Ford</option>
+            <option value="Chevrolet">Chevrolet</option>
+            <option value="Nissan">Nissan</option>
+            <option value="Hyundai">Hyundai</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)">Model</label>
+          <select class="finder-select" id="finderModel" onchange="onModelChange()">
+            <option value="">All Models</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)">Year</label>
+          <select class="finder-select" id="finderYear">
+            <option value="">All Years</option>
+          </select>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <label style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:rgba(255,255,255,.5)">Part Category</label>
+          <select class="finder-select" id="finderCategory">
+            <option value="">All Categories</option>
+            <option value="engine">Engine Parts</option>
+            <option value="brakes">Brake System</option>
+            <option value="suspension">Suspension</option>
+            <option value="electrical">Electrical</option>
+            <option value="wheels">Wheels</option>
+            <option value="interior">Interior</option>
+            <option value="exterior">Exterior</option>
+            <option value="fluids">Oil &amp; Fluids</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:var(--space-3);margin-top:var(--space-5);flex-wrap:wrap">
+        <button class="btn btn-primary btn-lg" onclick="runSearch()" style="flex:1;min-width:180px">
+          <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          Find Compatible Parts
+        </button>
+        <button class="btn" onclick="resetFinder()" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.8);border:1.5px solid rgba(255,255,255,.2);padding:0 var(--space-5)">
+          Reset
+        </button>
+      </div>
+    </div>
+
+    <div class="finder-stats">
+      <div class="finder-stat"><span class="num" id="statBrand">BMW</span><span class="label">Primary Brand</span></div>
+      <div class="finder-stat"><span class="num">5,000+</span><span class="label">Parts Available</span></div>
+      <div class="finder-stat"><span class="num">50+</span><span class="label">Countries Shipped</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- Results -->
+<section class="results-section">
+  <div class="container">
+    <div id="resultsHeader" class="results-header" style="display:none">
+      <div>
+        <div id="vehicleTag"></div>
+        <h2 style="font-size:20px;font-weight:800;margin-top:var(--space-2)" id="resultsTitle">Compatible Parts</h2>
+        <p id="resultsCount" style="font-size:14px;color:var(--text-muted);margin-top:4px"></p>
+      </div>
+      <a href="/pages/shop.html" class="btn btn-outline btn-sm">View All Parts</a>
+    </div>
+
+    <!-- Category quick filters -->
+    <div class="category-quick-filter" id="catQuickFilters" style="display:none">
+      <button class="cat-filter-btn active" onclick="filterByCategory('', this)">All</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('engine', this)">Engine</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('brakes', this)">Brakes</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('suspension', this)">Suspension</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('electrical', this)">Electrical</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('wheels', this)">Wheels</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('interior', this)">Interior</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('exterior', this)">Exterior</button>
+      <button class="cat-filter-btn" onclick="filterByCategory('fluids', this)">Fluids</button>
+    </div>
+
+    <!-- Default state -->
+    <div id="defaultState">
+      <div class="section-label" style="margin-bottom:var(--space-4)">Popular BMW Searches</div>
+      <div style="display:flex;flex-wrap:wrap;gap:var(--space-3);margin-bottom:var(--space-10)">
+        <button onclick="quickSearch('BMW','3 Series','','brakes')" class="cat-filter-btn">BMW 3 Series — Brakes</button>
+        <button onclick="quickSearch('BMW','5 Series','','suspension')" class="cat-filter-btn">BMW 5 Series — Suspension</button>
+        <button onclick="quickSearch('BMW','X5','','engine')" class="cat-filter-btn">BMW X5 — Engine Parts</button>
+        <button onclick="quickSearch('BMW','M3','','')" class="cat-filter-btn">BMW M3 — All Parts</button>
+        <button onclick="quickSearch('BMW','1 Series','','electrical')" class="cat-filter-btn">BMW 1 Series — Electrical</button>
+        <button onclick="quickSearch('BMW','','','brakes')" class="cat-filter-btn">All BMW Brake Parts</button>
+        <button onclick="quickSearch('BMW','','','engine')" class="cat-filter-btn">All BMW Engine Parts</button>
+      </div>
+
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-10);text-align:center">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-muted);margin:0 auto 20px;display:block;opacity:.4"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <h3 style="font-size:20px;font-weight:700;margin-bottom:var(--space-2)">Select Your Vehicle Above</h3>
+        <p style="color:var(--text-muted);font-size:14px;max-width:400px;margin:0 auto">Choose your brand, model, and year to instantly see all compatible parts in our catalog.</p>
+      </div>
+    </div>
+
+    <!-- Results grid -->
+    <div class="finder-grid" id="resultsGrid" style="display:none"></div>
+    <div id="noResults" class="no-results" style="display:none">
+      <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <h3 style="font-size:20px;font-weight:700;margin-bottom:var(--space-2);color:var(--text-primary)">No parts found</h3>
+      <p style="margin-bottom:var(--space-5)">We don't currently have parts matching your exact selection. Try broader filters or contact us — we may be able to source what you need.</p>
+      <div style="display:flex;gap:var(--space-3);justify-content:center">
+        <a href="/pages/shop.html" class="btn btn-primary btn-sm">Browse All Parts</a>
+        <a href="/pages/contact.html" class="btn btn-outline btn-sm">Request a Part</a>
+      </div>
+    </div>
+    <div id="paginationEl" class="pagination" style="margin-top:var(--space-8)"></div>
+  </div>
+</section>
+
+<!-- Drawers -->
+<div class="drawer-overlay"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-header"><h3>Cart <span style="color:var(--text-muted);font-weight:400;font-size:14px" data-cart-items-count></span></h3><button class="drawer-close" onclick="SAS.closeDrawer('cartDrawer')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="drawer-body" id="cartDrawerItems"></div>
+  <div class="drawer-footer"><div id="cartDrawerSummary" style="margin-bottom:var(--space-4)"></div><a href="/pages/checkout.html" class="btn btn-primary btn-full btn-lg">Proceed to Checkout</a></div>
+</div>
+<div class="drawer left" id="mobileMenuDrawer" style="width:min(300px,92vw)">
+  <div class="drawer-header"><h3>Menu</h3><button class="drawer-close" onclick="SAS.closeDrawer('mobileMenuDrawer')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="drawer-body" style="padding:0">
+    <a href="/" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);border-bottom:1px solid var(--divider);text-decoration:none">Home</a>
+    <a href="/pages/shop.html" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);border-bottom:1px solid var(--divider);text-decoration:none">Shop</a>
+    <a href="/pages/bmw-finder.html" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--blue);border-bottom:1px solid var(--divider);text-decoration:none">BMW Finder</a>
+
+    <a href="/pages/contact.html" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);text-decoration:none">Contact</a>
+  </div>
+  <div class="drawer-footer"><a href="/pages/login.html" class="btn btn-primary btn-full" data-guest-show>Sign In</a></div>
+</div>
+
+<a href="/pages/contact.html" class="float-support"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
+<div class="sticky-cart-bar" style="display:none">
+  <button class="btn btn-secondary" onclick="SAS.openDrawer('cartDrawer')">Cart (<span data-cart-count>0</span>)</button>
+  <a href="/pages/checkout.html" class="btn btn-primary flex-1">Checkout — <span data-cart-total>$0.00</span></a>
+</div>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+const VEHICLE_DATA = {
+  BMW:       { models:['1 Series','2 Series','3 Series','4 Series','5 Series','6 Series','7 Series','8 Series','M2','M3','M4','M5','M8','X1','X2','X3','X4','X5','X6','X7','Z4','i3','i4','i8','iX'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Toyota:    { models:['Camry','Corolla','RAV4','Highlander','4Runner','Tacoma','Tundra','Supra','Prius','Sienna','Avalon','Venza'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Mercedes:  { models:['C-Class','E-Class','S-Class','GLC','GLE','GLS','A-Class','CLA','AMG GT','G-Class'], years:Array.from({length:25},(_,i)=>2025-i) },
+  Honda:     { models:['Civic','Accord','CR-V','Pilot','HR-V','Ridgeline','Odyssey','Passport','Fit'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Ford:      { models:['F-150','Mustang','Explorer','Escape','Edge','Bronco','Ranger','Expedition','F-250','F-350'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Chevrolet: { models:['Silverado','Equinox','Traverse','Tahoe','Suburban','Camaro','Colorado','Blazer','Trailblazer'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Nissan:    { models:['Altima','Sentra','Rogue','Pathfinder','Frontier','Titan','Armada','370Z','GT-R','Murano'], years:Array.from({length:30},(_,i)=>2025-i) },
+  Hyundai:   { models:['Elantra','Sonata','Tucson','Santa Fe','Palisade','Kona','Venue','Ioniq 5','Ioniq 6'], years:Array.from({length:20},(_,i)=>2025-i) },
+};
+
+let allResults = [];
+let currentCatFilter = '';
+
+function onBrandChange() {
+  const brand   = document.getElementById('finderBrand').value;
+  const modelEl = document.getElementById('finderModel');
+  const yearEl  = document.getElementById('finderYear');
+  modelEl.innerHTML = '<option value="">All Models</option>';
+  yearEl.innerHTML  = '<option value="">All Years</option>';
+
+  document.getElementById('statBrand').textContent = brand || 'Multi-Brand';
+
+  if (!brand || !VEHICLE_DATA[brand]) return;
+  VEHICLE_DATA[brand].models.forEach(m => {
+    const o = document.createElement('option'); o.value = o.textContent = m; modelEl.appendChild(o);
+  });
+  VEHICLE_DATA[brand].years.forEach(y => {
+    const o = document.createElement('option'); o.value = o.textContent = y; yearEl.appendChild(o);
+  });
+}
+
+function onModelChange() {
+  const brand = document.getElementById('finderBrand').value;
+  const yearEl = document.getElementById('finderYear');
+  yearEl.innerHTML = '<option value="">All Years</option>';
+  if (!brand || !VEHICLE_DATA[brand]) return;
+  VEHICLE_DATA[brand].years.forEach(y => {
+    const o = document.createElement('option'); o.value = o.textContent = y; yearEl.appendChild(o);
+  });
+}
+
+function quickSearch(brand, model, year, category) {
+  document.getElementById('finderBrand').value = brand;
+  onBrandChange();
+  if (model) { document.getElementById('finderModel').value = model; onModelChange(); }
+  if (year)  document.getElementById('finderYear').value    = year;
+  if (category) document.getElementById('finderCategory').value = category;
+  runSearch();
+}
+
+async function runSearch() {
+  const brand    = document.getElementById('finderBrand').value;
+  const model    = document.getElementById('finderModel').value;
+  const year     = document.getElementById('finderYear').value;
+  const category = document.getElementById('finderCategory').value;
+
+  if (!brand) { SAS.toast.error('Please select a vehicle brand'); return; }
+
+  document.getElementById('defaultState').style.display     = 'none';
+  document.getElementById('resultsGrid').style.display      = 'none';
+  document.getElementById('noResults').style.display        = 'none';
+  document.getElementById('resultsHeader').style.display    = 'none';
+  document.getElementById('catQuickFilters').style.display  = 'none';
+
+  const grid = document.getElementById('resultsGrid');
+  grid.style.display = 'grid';
+  grid.innerHTML = Array(8).fill(`<div class="product-card" style="pointer-events:none"><div class="product-card-img skeleton" style="aspect-ratio:1"></div><div class="product-card-body" style="gap:10px"><div class="skeleton" style="height:10px;width:50%;border-radius:4px"></div><div class="skeleton" style="height:14px;width:90%;border-radius:4px"></div></div><div class="product-card-footer"><div class="skeleton" style="height:22px;width:70px;border-radius:4px"></div><div class="skeleton" style="height:36px;width:36px;border-radius:8px"></div></div></div>`).join('');
+
+  try {
+    const params = { brand, limit:48 };
+    if (model)    params.model    = model;
+    if (year)     params.year     = year;
+    if (category) params.category = category;
+
+    const res = await SAS.productsAPI.getAll(params);
+    allResults = res.data.products;
+    currentCatFilter = '';
+
+    renderResults(allResults);
+    updateResultsHeader(brand, model, year, category, allResults.length);
+    document.getElementById('catQuickFilters').style.display = 'flex';
+    document.querySelector('.cat-filter-btn.active')?.classList.remove('active');
+    document.querySelector('.cat-filter-btn')?.classList.add('active');
+
+    // Update URL
+    const urlParams = new URLSearchParams({ brand, ...(model&&{model}), ...(year&&{year}), ...(category&&{category}) });
+    history.pushState({}, '', `?${urlParams}`);
+  } catch (err) {
+    grid.innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:60px;color:var(--text-muted)"><p>Search failed. Please try again.</p></div>`;
+  }
+}
+
+function filterByCategory(cat, btn) {
+  currentCatFilter = cat;
+  document.querySelectorAll('.cat-filter-btn').forEach(b => b.classList.remove('active'));
+  btn?.classList.add('active');
+  const filtered = cat ? allResults.filter(p => p.category === cat) : allResults;
+  renderResults(filtered);
+}
+
+function updateResultsHeader(brand, model, year, category, count) {
+  const header   = document.getElementById('resultsHeader');
+  const tag      = document.getElementById('vehicleTag');
+  const title    = document.getElementById('resultsTitle');
+  const countEl  = document.getElementById('resultsCount');
+
+  let tagText = brand;
+  if (model) tagText += ` ${model}`;
+  if (year)  tagText += ` (${year})`;
+
+  tag.innerHTML = `<span class="vehicle-tag">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+    ${tagText}
+  </span>`;
+
+  title.textContent  = `${category ? SAS.utils.slugToTitle(category)+' for ' : 'All Parts for '} ${tagText}`;
+  countEl.textContent = `${count} compatible part${count!==1?'s':''} found`;
+  header.style.display = 'flex';
+}
+
+function renderResults(products) {
+  const grid     = document.getElementById('resultsGrid');
+  const noResult = document.getElementById('noResults');
+
+  if (!products.length) {
+    grid.style.display     = 'none';
+    noResult.style.display = 'block';
+    return;
+  }
+  noResult.style.display = 'none';
+  grid.style.display = 'grid';
+
+  grid.innerHTML = products.map(p => {
+    const price    = p.salePrice && p.salePrice < p.price ? p.salePrice : p.price;
+    const isOnSale = p.salePrice && p.salePrice < p.price;
+    const oos      = p.stock === 0;
+    const pct      = isOnSale ? Math.round(((p.price - p.salePrice) / p.price) * 100) : 0;
+    const pd       = JSON.stringify({_id:p._id,name:p.name,brand:p.brand,sku:p.sku,price:p.salePrice&&p.salePrice<p.price?p.salePrice:p.price,stock:p.stock,images:p.images,slug:p.slug});
+
+    return `<div class="product-card ${oos?'out-of-stock':''}">
+      <a href="/pages/product.html?slug=${p.slug}" class="product-card-img">
+        ${p.images?.[0]?.url?`<img src="${p.images[0].url}" alt="${p.name}" loading="lazy">`:`<div class="product-card-img-placeholder"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/></svg></div>`}
+        <div class="product-card-badges">${isOnSale?`<span class="badge badge-crimson">-${pct}%</span>`:''}</div>
+      </a>
+      <div class="product-card-body">
+        <div class="product-card-brand">${p.brand}</div>
+        <a href="/pages/product.html?slug=${p.slug}" class="product-card-name">${p.name}</a>
+        ${p.sku?`<div class="product-card-compat">SKU: ${p.sku}</div>`:''}
+      </div>
+      <div class="product-card-footer">
+        <div class="product-price">${isOnSale?`<span class="product-price-sale">${SAS.utils.formatPrice(p.salePrice)}</span><span class="product-price-original">${SAS.utils.formatPrice(p.price)}</span>`:`<span class="product-price-current">${SAS.utils.formatPrice(price)}</span>`}</div>
+        <button class="product-card-add" onclick="event.preventDefault();SAS.cart.add(${pd.replace(/"/g,'&quot;')});syncCart()" ${oos?'disabled':''}>
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function resetFinder() {
+  document.getElementById('finderBrand').value    = '';
+  document.getElementById('finderModel').innerHTML = '<option value="">All Models</option>';
+  document.getElementById('finderYear').innerHTML  = '<option value="">All Years</option>';
+  document.getElementById('finderCategory').value  = '';
+  document.getElementById('statBrand').textContent = 'Multi-Brand';
+  document.getElementById('defaultState').style.display     = 'block';
+  document.getElementById('resultsGrid').style.display      = 'none';
+  document.getElementById('noResults').style.display        = 'none';
+  document.getElementById('resultsHeader').style.display    = 'none';
+  document.getElementById('catQuickFilters').style.display  = 'none';
+  allResults = [];
+  history.pushState({}, '', window.location.pathname);
+}
+
+function syncCart() {
+  SAS.cart.renderItems(document.getElementById('cartDrawerItems'));
+  SAS.cart.renderSummary(document.getElementById('cartDrawerSummary'));
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  // Pre-populate BMW models on load
+  onBrandChange();
+
+  // Read URL params and auto-search
+  const p = new URLSearchParams(window.location.search);
+  if (p.get('brand')) {
+    document.getElementById('finderBrand').value = p.get('brand');
+    onBrandChange();
+    if (p.get('model'))    { document.getElementById('finderModel').value    = p.get('model');    onModelChange(); }
+    if (p.get('year'))     document.getElementById('finderYear').value     = p.get('year');
+    if (p.get('category')) document.getElementById('finderCategory').value = p.get('category');
+    runSearch();
+  }
+
+  SAS.cart.on(() => syncCart());
+  syncCart();
+});
+</script>
+</body>
+</html>

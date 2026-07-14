@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Return Policy — Shift Auto Supply</title>
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+<header class="header"><div class="header-inner"><a href="/" class="site-logo"><div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div></a><div style="flex:1"></div><a href="/pages/shop.html" class="btn btn-primary btn-sm">Shop Parts</a></div></header>
+<div class="container" style="max-width:720px;padding:var(--space-10) var(--space-5) var(--space-20)">
+  <nav class="breadcrumb" style="margin-bottom:var(--space-6)"><a href="/">Home</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span>Return Policy</span></nav>
+  <h1 style="font-size:32px;font-weight:800;margin-bottom:var(--space-3)">Return Policy</h1>
+  <p style="color:var(--text-muted);font-size:14px;margin-bottom:var(--space-8)">Last updated: January 2025</p>
+  <div style="display:flex;flex-direction:column;gap:var(--space-8);font-size:15px;line-height:1.8;color:var(--text-secondary)">
+    <div class="alert alert-info"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg><div>We want you to be completely satisfied with your purchase. If you're not happy for any reason, we'll work with you to make it right.</div></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">30-Day Return Window</h2><p>We accept returns within <strong style="color:var(--text-primary)">30 days</strong> of the delivery date. To be eligible for a return, items must be unused, in the same condition you received them, and in their original packaging where applicable.</p></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">Eligible for Return</h2><ul style="list-style:disc;padding-left:var(--space-6);display:flex;flex-direction:column;gap:var(--space-2)"><li>New parts that are unused and in original condition</li><li>Parts that do not fit your vehicle (compatibility issue)</li><li>Items that arrived damaged or defective</li><li>Incorrect items shipped (our error)</li></ul></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">Not Eligible for Return</h2><ul style="list-style:disc;padding-left:var(--space-6);display:flex;flex-direction:column;gap:var(--space-2)"><li>Used parts (unless defective or incorrectly shipped)</li><li>Parts damaged due to improper installation</li><li>Items returned after 30 days</li><li>Electrical components that have been installed</li><li>Fluids, oils, or consumables that have been opened</li></ul></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">Return Process</h2><ol style="list-style:decimal;padding-left:var(--space-6);display:flex;flex-direction:column;gap:var(--space-3)"><li>Contact us at <a href="/pages/contact.html" style="color:var(--blue);font-weight:600">our contact page</a> with your order number and reason for return</li><li>Our team will respond within 24 hours with return instructions</li><li>Ship the item back using a trackable shipping method</li><li>Once received and inspected, we'll process your refund within 5–7 business days</li></ol></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">Refunds</h2><p>Approved refunds are returned via the same payment method used for the original purchase. Shipping costs are non-refundable unless the return is due to our error (wrong item, defective part). For international returns, you are responsible for return shipping costs and any customs fees.</p></div>
+    <div><h2 style="font-size:18px;font-weight:700;color:var(--text-primary);margin-bottom:var(--space-3)">Damaged or Defective Items</h2><p>If your item arrives damaged or is defective, contact us immediately with photos. We will arrange a replacement or full refund at no cost to you, including return shipping. Please do not attempt to install a visibly damaged part.</p></div>
+  </div>
+</div>
+<footer style="border-top:1px solid var(--border);padding:var(--space-6) 0;text-align:center"><p style="font-size:13px;color:var(--text-muted)">&copy; <span id="yr"></span> Shift Auto Supply</p></footer>
+<script src="/js/core/api.js"></script><script src="/js/core/auth.js"></script><script src="/js/core/cart.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

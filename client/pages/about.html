@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>About Us — Shift Auto Supply</title>
+  <meta name="description" content="Learn about Shift Auto Supply — a premium BMW and auto parts supplier trusted by enthusiasts and mechanics in 50+ countries since 2019.">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .about-hero { background:linear-gradient(135deg,#0A0F1E 0%,#0d1b3e 60%,#1a2a5e 100%); padding:var(--space-20) 0; color:#fff; position:relative; overflow:hidden; }
+    .about-hero::before { content:''; position:absolute; top:-30%; right:-10%; width:600px; height:600px; background:radial-gradient(circle,rgba(0,102,204,.15) 0%,transparent 70%); }
+    .about-hero-content { position:relative; z-index:1; max-width:640px; }
+    .value-card { background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-lg); padding:var(--space-6); }
+    .value-icon { width:52px; height:52px; background:var(--blue-50); border-radius:var(--radius-md); display:flex; align-items:center; justify-content:center; color:var(--blue); margin-bottom:var(--space-4); }
+    .stat-num { font-size:48px; font-weight:800; color:var(--blue); font-family:var(--font-head); letter-spacing:-0.04em; line-height:1; }
+    .stat-label { font-size:14px; color:var(--text-secondary); margin-top:6px; }
+  </style>
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="site-logo"><div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div></a>
+    <div style="flex:1"></div>
+    <div class="header-actions"><button class="theme-toggle" aria-label="Toggle dark mode"></button><a href="/pages/shop.html" class="btn btn-primary btn-sm">Shop Parts</a></div>
+  </div>
+</header>
+
+<div class="about-hero">
+  <div class="container">
+    <div class="about-hero-content">
+      <div class="section-label" style="color:rgba(255,255,255,.6)">Our Story</div>
+      <h1 style="font-size:clamp(32px,5vw,52px);font-weight:800;letter-spacing:-0.03em;line-height:1.1;margin-bottom:var(--space-5)">Built for the BMW Community. Trusted Worldwide.</h1>
+      <p style="font-size:17px;color:rgba(255,255,255,.75);line-height:1.8;margin-bottom:var(--space-8)">Shift Auto Supply started in 2019 as a simple Facebook Marketplace listing and grew into a trusted global automotive parts supplier. We believe every BMW owner deserves access to quality parts — regardless of where they live.</p>
+      <div style="display:flex;gap:var(--space-8)">
+        <div><div class="stat-num" style="color:#7BB5F0">5K+</div><div class="stat-label" style="color:rgba(255,255,255,.6)">Parts in Catalog</div></div>
+        <div><div class="stat-num" style="color:#7BB5F0">50+</div><div class="stat-label" style="color:rgba(255,255,255,.6)">Countries Served</div></div>
+        <div><div class="stat-num" style="color:#7BB5F0">98%</div><div class="stat-label" style="color:rgba(255,255,255,.6)">Satisfaction Rate</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<section class="section">
+  <div class="container">
+    <div style="text-align:center;margin-bottom:var(--space-12)">
+      <div class="section-label" style="justify-content:center">What We Stand For</div>
+      <h2 style="font-size:clamp(24px,4vw,36px);font-weight:800;letter-spacing:-0.02em">Our Values</h2>
+    </div>
+    <div class="grid-3">
+      <div class="value-card">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:var(--space-2)">Radical Transparency</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">We never use misleading descriptions, inflated ratings, or deceptive pricing. Every part is accurately described — condition, compatibility, and origin stated clearly.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:var(--space-2)">Personal Service</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">You deal with a real person — not a bot, not an algorithm. Every payment is verified by our team, every order personally prepared. That's the standard we hold ourselves to.</p>
+      </div>
+      <div class="value-card">
+        <div class="value-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg></div>
+        <h3 style="font-size:17px;font-weight:700;margin-bottom:var(--space-2)">Global Access</h3>
+        <p style="font-size:14px;color:var(--text-secondary);line-height:1.7">Whether you're in the US, Nigeria, Germany, or Australia — you deserve access to quality BMW parts. We ship to 50+ countries and treat every customer with equal care.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="background:var(--bg-elevated)">
+  <div class="container" style="max-width:800px">
+    <div class="section-label" style="justify-content:center;margin-bottom:var(--space-4)">Our Approach</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);font-weight:800;text-align:center;letter-spacing:-0.02em;margin-bottom:var(--space-8)">Why We Do Manual Payment Verification</h2>
+    <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-xl);padding:var(--space-8)">
+      <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:var(--space-5)">When we started, we heard too many stories of customers losing money to fraudulent auto parts sellers online — and of legitimate sellers dealing with fraudulent chargebacks from payment processors.</p>
+      <p style="font-size:16px;line-height:1.8;color:var(--text-secondary);margin-bottom:var(--space-5)">Our manual payment verification model solves both problems. Every transaction is personally reviewed. Every order is confirmed before it ships. This isn't a workaround — it's a <strong style="color:var(--text-primary)">deliberate choice to protect everyone involved.</strong></p>
+      <p style="font-size:16px;line-height:1.8;color:var(--text-secondary)">We know it requires a bit more patience than a one-click checkout. We believe that patience is worth it — and hundreds of satisfied customers across 50 countries agree.</p>
+    </div>
+  </div>
+</section>
+
+<section class="section">
+  <div class="container" style="text-align:center">
+    <div class="section-label" style="justify-content:center">Our Shipping Approach</div>
+    <h2 style="font-size:clamp(22px,4vw,32px);font-weight:800;margin-bottom:var(--space-3);letter-spacing:-0.02em">Personal, Reliable Global Delivery</h2>
+    <p style="font-size:16px;color:var(--text-secondary);max-width:560px;margin:0 auto var(--space-8)">Every order is personally handled by our team. Once your payment is confirmed, we arrange shipping with a trusted carrier and provide you with full tracking details — no automated systems, no guesswork.</p>
+    <div style="display:flex;gap:var(--space-5);justify-content:center;flex-wrap:wrap">
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+        Tracking number provided after dispatch
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Delivered to 50+ countries
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;font-size:14px;color:var(--text-secondary)">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Personal support throughout delivery
+      </div>
+    </div>
+  </div>
+</section>
+
+<div style="background:linear-gradient(135deg,var(--blue) 0%,var(--blue-dark) 100%);padding:var(--space-16) 0;text-align:center;color:#fff">
+  <div class="container">
+    <h2 style="font-size:clamp(24px,4vw,36px);font-weight:800;margin-bottom:var(--space-4)">Ready to Find Your Part?</h2>
+    <p style="color:rgba(255,255,255,.8);font-size:16px;margin-bottom:var(--space-8)">Browse our catalog of 5,000+ BMW and auto parts. Global shipping. Personal service.</p>
+    <div style="display:flex;gap:var(--space-4);justify-content:center;flex-wrap:wrap">
+      <a href="/pages/shop.html" class="btn btn-xl" style="background:#fff;color:var(--blue);font-weight:700">Shop All Parts</a>
+      <a href="/pages/contact.html" class="btn btn-xl" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3)">Contact Us</a>
+    </div>
+  </div>
+</div>
+
+<footer style="background:var(--neutral-900);color:var(--neutral-400);padding:var(--space-8) 0;text-align:center">
+  <p style="font-size:13px">&copy; <span id="yr"></span> Shift Auto Supply. All rights reserved.</p>
+</footer>
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>document.getElementById('yr').textContent=new Date().getFullYear();</script>
+</body>
+</html>

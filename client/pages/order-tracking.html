@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Track Your Order — Shift Auto Supply</title>
+  <meta name="description" content="Track your Shift Auto Supply order in real-time. Enter your order number to see live status updates.">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .tracking-page { max-width: 720px; margin: 0 auto; padding: var(--space-10) var(--space-5) var(--space-20); }
+    .tracking-search-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-xl); padding: var(--space-8); margin-bottom: var(--space-8); }
+    .tracking-search-card h1 { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; margin-bottom: var(--space-2); }
+    .tracking-search-card p { color: var(--text-secondary); font-size: 15px; margin-bottom: var(--space-6); }
+    .tracking-search-row { display: flex; gap: var(--space-3); }
+    .tracking-search-row input { flex: 1; height: 52px; font-size: 16px; letter-spacing: 0.02em; }
+    .tracking-search-row button { height: 52px; padding: 0 var(--space-6); white-space: nowrap; }
+    .order-result { animation: slideUp .3s ease both; }
+    .tracking-status-banner { border-radius: var(--radius-lg); padding: var(--space-5) var(--space-6); margin-bottom: var(--space-6); display: flex; align-items: center; gap: var(--space-4); }
+    .tracking-status-icon { width: 48px; height: 48px; border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+    .tracking-status-banner.under_review { background: #FFFBEB; border: 1px solid #FDE68A; }
+    .tracking-status-banner.under_review .tracking-status-icon { background: #FEF3C7; color: #D97706; }
+    .tracking-status-banner.confirmed, .tracking-status-banner.processing { background: var(--blue-50); border: 1px solid var(--blue-100); }
+    .tracking-status-banner.confirmed .tracking-status-icon, .tracking-status-banner.processing .tracking-status-icon { background: var(--blue-100); color: var(--blue); }
+    .tracking-status-banner.shipped, .tracking-status-banner.delivered { background: #F0FDF4; border: 1px solid #BBF7D0; }
+    .tracking-status-banner.shipped .tracking-status-icon, .tracking-status-banner.delivered .tracking-status-icon { background: #DCFCE7; color: #22C55E; }
+    [data-theme="dark"] .tracking-status-banner.under_review { background: rgba(217,119,6,.08); border-color: rgba(217,119,6,.2); }
+    [data-theme="dark"] .tracking-status-banner.shipped, [data-theme="dark"] .tracking-status-banner.delivered { background: rgba(34,197,94,.06); border-color: rgba(34,197,94,.2); }
+    .tracking-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--space-5); }
+    .tracking-card-header { padding: var(--space-4) var(--space-6); border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: var(--space-3); font-size: 14px; font-weight: 700; background: var(--bg-elevated); }
+    .tracking-card-body { padding: var(--space-5) var(--space-6); }
+    .tracking-number-display { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius-md); padding: var(--space-4) var(--space-5); display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); }
+    .tracking-number-val { font-family: var(--font-mono); font-size: 18px; font-weight: 700; color: var(--text-primary); letter-spacing: 0.04em; }
+    .item-row { display: flex; justify-content: space-between; align-items: flex-start; padding: var(--space-3) 0; border-bottom: 1px solid var(--divider); font-size: 14px; }
+    .item-row:last-child { border-bottom: none; }
+    .copy-btn { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); font-size: 12px; font-weight: 600; color: var(--text-secondary); cursor: pointer; transition: all var(--transition-fast); }
+    .copy-btn:hover { border-color: var(--blue); color: var(--blue); background: var(--blue-50); }
+  </style>
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div>
+    </a>
+    <div class="header-search hide-sm">
+      <input type="search" placeholder="Search parts..." autocomplete="off" onkeydown="if(event.key==='Enter')window.location.href='/pages/shop.html?q='+this.value">
+      <button class="header-search-btn"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+      <a href="/pages/dashboard.html" class="header-btn" data-auth-show style="display:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a href="/pages/login.html" class="header-btn" data-guest-show><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a href="/pages/shop.html" class="btn btn-primary btn-sm">Shop Parts</a>
+    </div>
+  </div>
+</header>
+
+<div class="tracking-page">
+  <nav class="breadcrumb" style="margin-bottom:var(--space-6)">
+    <a href="/">Home</a>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span>Track Order</span>
+  </nav>
+
+  <div class="tracking-search-card">
+    <div style="display:flex;align-items:center;gap:var(--space-4);margin-bottom:var(--space-4)">
+      <div style="width:52px;height:52px;background:var(--blue-50);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+      </div>
+      <div>
+        <h1 style="font-size:22px;margin-bottom:4px">Track Your Order</h1>
+        <p style="font-size:14px;color:var(--text-muted);margin:0;line-height:1.5">Your order status is shown below. Tracking details are provided by our team after dispatch.</p>
+      </div>
+    </div>
+    <div style="background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md);padding:var(--space-4);display:flex;align-items:flex-start;gap:var(--space-3)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <p style="font-size:13px;color:var(--blue-dark);margin:0;line-height:1.6">
+        Once your payment is confirmed, our team personally arranges your shipment and provides you with the carrier name and tracking number directly.
+        Questions? <a href="https://www.facebook.com/share/1SoYSJPkMu/" target="_blank" rel="noopener" style="font-weight:700;color:var(--blue)">Message us on Facebook</a>.
+      </p>
+    </div>
+  </div>
+
+  <div id="trackingResult" style="display:none"></div>
+
+  <!-- My Orders (logged in) -->
+  <div id="myOrdersSection" data-auth-show style="display:none">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:var(--space-5)">
+      <h2 style="font-size:18px;font-weight:700">My Recent Orders</h2>
+      <a href="/pages/dashboard.html" class="btn btn-ghost btn-sm">View All</a>
+    </div>
+    <div id="myOrdersList"></div>
+  </div>
+
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:var(--space-8) 0;margin-top:var(--space-16);text-align:center">
+  <div class="container">
+    <p style="font-size:13px;color:var(--text-muted)">&copy; <span id="yr"></span> Shift Auto Supply. <a href="/pages/contact.html" style="color:var(--blue)">Need help?</a></p>
+  </div>
+</footer>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+
+const STATUS_CONFIG = {
+  pending:      { label:'Order Placed',         color:'under_review', icon:'clock' },
+  under_review: { label:'Payment Under Review', color:'under_review', icon:'eye' },
+  confirmed:    { label:'Payment Confirmed',    color:'confirmed',    icon:'check-circle' },
+  processing:   { label:'Processing',           color:'processing',   icon:'package' },
+  shipped:      { label:'Shipped',              color:'shipped',      icon:'truck' },
+  delivered:    { label:'Delivered',            color:'delivered',    icon:'check-circle' },
+  cancelled:    { label:'Cancelled',            color:'cancelled',    icon:'x-circle' },
+};
+
+const ICONS = {
+  clock: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>`,
+  eye:   `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`,
+  'check-circle': `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>`,
+  package: `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></path></svg>`,
+  truck:  `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>`,
+  'x-circle': `<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>`,
+};
+
+const TIMELINE_STEPS = [
+  { key: 'pending',      label: 'Order Placed',         note: 'Order received' },
+  { key: 'under_review', label: 'Payment Under Review', note: 'Awaiting verification' },
+  { key: 'confirmed',    label: 'Payment Confirmed',    note: 'Payment verified' },
+  { key: 'processing',   label: 'Processing',           note: 'Preparing for shipment' },
+  { key: 'shipped',      label: 'Shipped',              note: 'On its way to you' },
+  { key: 'delivered',    label: 'Delivered',            note: 'Arrived at destination' },
+];
+
+const STATUS_ORDER = ['pending','under_review','confirmed','processing','shipped','delivered'];
+
+async function trackOrder(orderNum) {
+  const input = orderNum || '';
+  if (!input) { SAS.toast.error('Please enter your order number'); return; }
+
+  const resultEl = document.getElementById('trackingResult');
+  resultEl.style.display = 'block';
+  resultEl.innerHTML = `<div style="text-align:center;padding:60px 20px;color:var(--text-muted)">
+    <div style="width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 16px"></div>
+    <p>Looking up your order…</p>
+  </div>`;
+
+  try {
+    const res = await SAS.ordersAPI.track(input);
+    const order = res.data;
+    renderOrderResult(order);
+  } catch (err) {
+    resultEl.innerHTML = `<div class="tracking-card">
+      <div class="tracking-card-body" style="text-align:center;padding:48px 24px">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.2" style="color:var(--text-muted);margin:0 auto 16px;display:block"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        <h3 style="font-size:18px;margin-bottom:8px">Order not found</h3>
+        <p style="font-size:14px;color:var(--text-muted);margin-bottom:20px">We couldn't find an order with that number. Please double-check and try again.</p>
+        <a href="/pages/contact.html" class="btn btn-outline btn-sm">Contact Support</a>
+      </div>
+    </div>`;
+  }
+}
+
+function renderOrderResult(order) {
+  const status    = order.orderStatus;
+  const payStatus = order.paymentStatus;
+  const cfg       = STATUS_CONFIG[status] || STATUS_CONFIG.pending;
+  const currentIdx = STATUS_ORDER.indexOf(status);
+
+  const resultEl = document.getElementById('trackingResult');
+  resultEl.className = 'order-result';
+
+  const reassuranceMessages = {
+    pending:      'Your order has been placed. Please complete your payment to begin processing.',
+    under_review: 'Your payment is currently being verified by our support team. Verification may take a little time depending on your payment provider.',
+    confirmed:    'Your payment has been confirmed! Your order is now moving to shipment preparation.',
+    processing:   'Your order is being prepared and packed for shipment. Our team will personally arrange delivery and send you the tracking details very soon.',
+    shipped:      'Great news — your order is on its way! Your tracking number and delivery company details have been shared with you directly by our team.',
+    delivered:    'Your order has been delivered. Thank you for shopping with Shift Auto Supply!',
+  };
+
+  resultEl.innerHTML = `
+    <div class="tracking-status-banner ${cfg.color}">
+      <div class="tracking-status-icon">${ICONS[cfg.icon] || ICONS.clock}</div>
+      <div>
+        <div style="font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;margin-bottom:4px;opacity:.7">Current Status</div>
+        <div style="font-size:18px;font-weight:800">${cfg.label}</div>
+        <div style="font-size:13px;margin-top:4px;opacity:.8">${reassuranceMessages[status] || ''}</div>
+      </div>
+    </div>
+
+    <!-- Order Info -->
+    <div class="tracking-card">
+      <div class="tracking-card-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+        Order Details
+      </div>
+      <div class="tracking-card-body">
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-5)">
+          <div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Order Number</div><div style="font-weight:700;font-family:var(--font-mono)">${order.orderNumber}</div></div>
+          <div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Placed</div><div style="font-weight:600">${SAS.utils.formatDate(order.createdAt)}</div></div>
+          <div><div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--text-muted);margin-bottom:4px">Order Total</div><div style="font-weight:700;color:var(--blue)">${SAS.utils.formatPrice(order.total)}</div></div>
+        </div>
+        <div style="border-top:1px solid var(--border);padding-top:var(--space-4)">
+          <div style="font-size:12px;font-weight:600;color:var(--text-muted);margin-bottom:var(--space-3);text-transform:uppercase;letter-spacing:.06em">Items</div>
+          ${order.items.map(i=>`<div class="item-row"><span>${i.name} <span style="color:var(--text-muted)">×${i.quantity}</span></span><span style="font-weight:700">${SAS.utils.formatPrice(i.price*i.quantity)}</span></div>`).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Shipping Address -->
+    <div class="tracking-card">
+      <div class="tracking-card-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+        Shipping To
+      </div>
+      <div class="tracking-card-body">
+        <div style="font-weight:700">${order.shipping?.name || '—'}</div>
+        <div style="font-size:14px;color:var(--text-secondary);margin-top:4px">${order.shipping?.city || ''}${order.shipping?.country ? ', ' + order.shipping.country : ''}</div>
+      </div>
+    </div>
+
+    <!-- Tracking / Shipping Info -->
+    <div class="tracking-card" style="border-color:${['shipped','delivered'].includes(order.orderStatus) ? 'rgba(34,197,94,.3)' : 'var(--border)'}">
+      <div class="tracking-card-header" style="${['shipped','delivered'].includes(order.orderStatus) ? 'background:rgba(34,197,94,.06)' : ''}">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="${['shipped','delivered'].includes(order.orderStatus) ? '#22C55E' : 'currentColor'}" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+        <span style="${['shipped','delivered'].includes(order.orderStatus) ? 'color:#22C55E' : ''}">Shipment Information</span>
+      </div>
+      <div class="tracking-card-body">
+        ${order.tracking?.number ? `
+          <div style="font-size:13px;color:var(--text-muted);margin-bottom:var(--space-2)">Tracking Number</div>
+          <div class="tracking-number-display" style="margin-bottom:var(--space-4)">
+            <span class="tracking-number-val">${order.tracking.number}</span>
+            <div style="display:flex;gap:8px">
+              <button class="copy-btn" onclick="navigator.clipboard.writeText('${order.tracking.number}');SAS.toast.success('Copied!')">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                Copy
+              </button>
+              ${order.tracking.url ? `<a href="${order.tracking.url}" target="_blank" rel="noopener" class="copy-btn" style="text-decoration:none">Track Online</a>` : ''}
+            </div>
+          </div>
+          ${order.tracking.provider ? `<div style="font-size:13px;color:var(--text-secondary);margin-bottom:var(--space-4)">Delivery Company: <strong>${order.tracking.provider}</strong></div>` : ''}
+        ` : ''}
+        <div style="background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md);padding:var(--space-4)">
+          <div style="display:flex;align-items:flex-start;gap:var(--space-3)">
+            <div style="width:36px;height:36px;background:var(--blue-100);border-radius:50%;display:flex;align-items:center;justify-content:center;color:var(--blue);flex-shrink:0;margin-top:2px">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+            </div>
+            <div>
+              <div style="font-size:13px;font-weight:700;color:var(--blue-dark);margin-bottom:4px">Personal Shipping Assistance</div>
+              <div style="font-size:13px;line-height:1.7;color:var(--text-secondary)">
+                Once your payment has been confirmed, our team will personally arrange for your order to be posted with a trusted delivery company using the shipping information you provided at checkout. You will receive your <strong style="color:var(--text-primary)">tracking number and the delivery company name</strong> directly from us as soon as your package is dispatched.
+              </div>
+              <a href="https://www.facebook.com/share/1SoYSJPkMu/" target="_blank" rel="noopener"
+                style="display:inline-flex;align-items:center;gap:8px;margin-top:var(--space-3);padding:8px 16px;background:var(--blue);color:#fff;border-radius:var(--radius-md);font-size:13px;font-weight:700;text-decoration:none;transition:background .15s ease">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+                Message Us on Facebook
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Order Timeline -->
+    <div class="tracking-card">
+      <div class="tracking-card-header">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+        Order Progress
+      </div>
+      <div class="tracking-card-body">
+        <div class="order-timeline">
+          ${TIMELINE_STEPS.map((step, idx) => {
+            const isDone    = idx < currentIdx;
+            const isCurrent = STATUS_ORDER.indexOf(step.key) === currentIdx;
+            const histEntry = order.statusHistory?.find(h => h.status === step.key);
+            return `<div class="timeline-step ${isDone ? 'completed' : isCurrent ? 'current' : ''}">
+              <div class="timeline-step-dot">${isDone ? `<svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>` : ''}</div>
+              <div class="timeline-step-content">
+                <div class="timeline-step-title">${step.label}</div>
+                <div class="timeline-step-note">${histEntry?.note || step.note}</div>
+                ${histEntry?.changedAt ? `<div class="timeline-step-time">${SAS.utils.formatDateTime(histEntry.changedAt)}</div>` : ''}
+              </div>
+            </div>`;
+          }).join('')}
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment status -->
+    ${payStatus === 'under_review' ? `
+    <div class="alert alert-warning" style="margin-top:var(--space-2)">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div>
+        <strong>Payment under review.</strong> Our team is verifying your payment. Once confirmed, your order will immediately move to preparation.
+        <br><span style="font-size:12px;color:inherit;opacity:.8">If you haven't uploaded payment proof yet, please do so now.</span>
+      </div>
+    </div>` : ''}
+
+    <div style="text-align:center;margin-top:var(--space-6)">
+      <a href="/pages/contact.html" class="btn btn-outline btn-sm">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+        Need Help? Contact Support
+      </a>
+    </div>
+  `;
+}
+
+async function loadMyOrders() {
+  if (!SAS.auth.isLoggedIn) return;
+  const section = document.getElementById('myOrdersSection');
+  const list    = document.getElementById('myOrdersList');
+  if (section) section.style.display = 'block';
+
+  try {
+    const res    = await SAS.ordersAPI.getMyOrders({ limit: 5 });
+    const orders = res.data.orders;
+    if (!orders.length) {
+      list.innerHTML = `<div class="tracking-card"><div class="tracking-card-body" style="text-align:center;padding:40px;color:var(--text-muted)"><p>No orders yet. <a href="/pages/shop.html" style="color:var(--blue)">Start shopping</a></p></div></div>`;
+      return;
+    }
+    list.innerHTML = orders.map(o => `
+      <div class="tracking-card" style="margin-bottom:var(--space-4);cursor:pointer" onclick="loadOrderByNumber('${o.orderNumber}')">
+        <div class="tracking-card-body" style="display:flex;align-items:center;justify-content:space-between;gap:var(--space-4)">
+          <div>
+            <div style="font-family:var(--font-mono);font-weight:700;font-size:14px">${o.orderNumber}</div>
+            <div style="font-size:13px;color:var(--text-muted);margin-top:2px">${SAS.utils.formatDate(o.createdAt)} &bull; ${o.items.length} item${o.items.length!==1?'s':''}</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:var(--space-3)">
+            <span class="badge ${SAS.utils.getStatusBadgeClass(o.orderStatus)}">${SAS.utils.getStatusLabel(o.orderStatus)}</span>
+            <span style="font-weight:700">${SAS.utils.formatPrice(o.total)}</span>
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><polyline points="9 18 15 12 9 6"/></svg>
+          </div>
+        </div>
+      </div>
+    `).join('');
+  } catch {}
+}
+
+function loadOrderByNumber(num) {
+  trackOrder(num);
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  // Auto-load order from URL param (linked from payment-upload page)
+  const urlOrder = new URLSearchParams(window.location.search).get('order');
+  if (urlOrder) {
+    loadOrderByNumber(urlOrder);
+  }
+  await loadMyOrders();
+});
+</script>
+</body>
+</html>

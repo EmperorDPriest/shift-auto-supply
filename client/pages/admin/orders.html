@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Orders — Admin — Shift Auto Supply</title>
+  <meta name="robots" content="noindex,nofollow">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <link rel="stylesheet" href="/css/pages/admin.css">
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body class="admin-body">
+
+<aside class="admin-sidebar" id="adminSidebar">
+  <div class="admin-sidebar-header">
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="site-logo-name"><span class="brand" style="font-size:15px">Shift Auto</span><span class="tagline">Admin Panel</span></div>
+    </a>
+  </div>
+  <nav class="admin-nav">
+    <div class="admin-nav-section">Overview</div>
+    <a href="/pages/admin/index.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>Dashboard</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Catalog</div>
+    <a href="/pages/admin/products.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="16.5" y1="9.4" x2="7.5" y2="4.21"/><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>Products</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Orders</div>
+    <a href="/pages/admin/orders.html" class="admin-nav-link active"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/></svg>All Orders</a>
+    <div class="admin-nav-section" style="margin-top:var(--space-4)">Settings</div>
+    <a href="/pages/admin/payments.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>Payment Methods</a>
+    <a href="/pages/admin/users.html" class="admin-nav-link"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>Users</a>
+  </nav>
+  <div class="admin-sidebar-footer">
+    <div class="admin-user-card">
+      <div class="admin-user-avatar">A</div>
+      <div><div style="font-size:13px;font-weight:700" data-user-name>Admin</div><div style="font-size:11px;color:var(--text-muted)" data-user-email></div></div>
+    </div>
+    <button onclick="SAS.auth.logout()" class="btn btn-ghost btn-sm" style="width:100%;margin-top:var(--space-3)">Sign Out</button>
+  </div>
+</aside>
+
+<button class="admin-sidebar-toggle" onclick="document.getElementById('adminSidebar').classList.toggle('mobile-open')">
+  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+</button>
+
+<main class="admin-main">
+  <div class="admin-topbar">
+    <div>
+      <h1 class="admin-page-title">Orders</h1>
+      <p class="admin-page-subtitle">Manage customer orders, update statuses, add tracking</p>
+    </div>
+    <div style="display:flex;gap:var(--space-3)">
+      <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+    </div>
+  </div>
+
+  <!-- Filters Bar -->
+  <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:var(--space-4) var(--space-5);margin-bottom:var(--space-5);display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+    <input type="search" id="orderSearch" class="form-input" placeholder="Search order #, customer..." style="width:220px;height:36px" oninput="debounceSearch()">
+    <select id="statusFilter" class="form-input" style="width:160px;height:36px" onchange="loadOrders(1)">
+      <option value="">All Statuses</option>
+      <option value="pending">Pending</option>
+      <option value="processing">Processing</option>
+      <option value="shipped">Shipped</option>
+      <option value="delivered">Delivered</option>
+      <option value="cancelled">Cancelled</option>
+    </select>
+    <select id="paymentFilter" class="form-input" style="width:180px;height:36px" onchange="loadOrders(1)">
+      <option value="">All Payment Status</option>
+      <option value="pending">Payment Pending</option>
+      <option value="under_review">Under Review</option>
+      <option value="confirmed">Confirmed</option>
+      <option value="failed">Failed</option>
+    </select>
+    <button class="btn btn-ghost btn-sm" onclick="clearFilters()">Clear Filters</button>
+    <span id="ordersCount" class="text-sm text-secondary" style="margin-left:auto"></span>
+  </div>
+
+  <!-- Orders Table -->
+  <div class="table-wrapper">
+    <table class="data-table" id="ordersTable">
+      <thead>
+        <tr>
+          <th>Order #</th>
+          <th>Customer</th>
+          <th>Items</th>
+          <th>Total</th>
+          <th>Payment</th>
+          <th>Status</th>
+          <th>Date</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody id="ordersTableBody">
+        <tr><td colspan="8" style="text-align:center;padding:60px;color:var(--text-muted)">Loading orders…</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div id="ordersPagination" class="pagination" style="margin-top:var(--space-6)"></div>
+</main>
+
+<!-- Order Detail / Edit Modal -->
+<div id="orderModal" style="display:none" class="modal-overlay" onclick="if(event.target===this)closeModal()">
+  <div class="modal" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <h3 id="modalTitle" style="font-size:16px;font-weight:700">Order Details</h3>
+      <button class="drawer-close" onclick="closeModal()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+      </button>
+    </div>
+    <div class="modal-body" id="modalBody"></div>
+    <div class="modal-footer">
+      <button class="btn btn-secondary" onclick="closeModal()">Close</button>
+      <button class="btn btn-primary" id="modalSaveBtn" onclick="saveOrder()">Save Changes</button>
+    </div>
+  </div>
+</div>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+let currentPage = 1;
+let currentOrderId = null;
+let searchTimer = null;
+
+function debounceSearch() {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => loadOrders(1), 400);
+}
+
+function clearFilters() {
+  document.getElementById('orderSearch').value = '';
+  document.getElementById('statusFilter').value = '';
+  document.getElementById('paymentFilter').value = '';
+  loadOrders(1);
+}
+
+async function loadOrders(page = 1) {
+  currentPage = page;
+  const tbody  = document.getElementById('ordersTableBody');
+  tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">
+    <div style="width:32px;height:32px;border:3px solid var(--border);border-top-color:var(--blue);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 12px"></div>
+    Loading orders…
+  </td></tr>`;
+
+  const params = {
+    page,
+    limit: 20,
+    sort: '-createdAt',
+  };
+  const status  = document.getElementById('statusFilter')?.value;
+  const payment = document.getElementById('paymentFilter')?.value;
+  if (status)  params.status = status;
+  if (payment) params.paymentStatus = payment;
+
+  // Search is client-side for now since we don't have full-text order search on backend
+  try {
+    const res    = await SAS.ordersAPI.getAll(params);
+    const orders = res.data.orders;
+    const pagination = res.data.pagination;
+
+    let filtered = orders;
+    const q = document.getElementById('orderSearch')?.value?.trim()?.toLowerCase();
+    if (q) {
+      filtered = orders.filter(o =>
+        o.orderNumber?.toLowerCase().includes(q) ||
+        o.shipping?.name?.toLowerCase().includes(q) ||
+        o.shipping?.email?.toLowerCase().includes(q) ||
+        o.guestEmail?.toLowerCase().includes(q)
+      );
+    }
+
+    document.getElementById('ordersCount').textContent = `${pagination.total} orders total`;
+
+    if (!filtered.length) {
+      tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:60px;color:var(--text-muted)">No orders found</td></tr>`;
+      document.getElementById('ordersPagination').innerHTML = '';
+      return;
+    }
+
+    tbody.innerHTML = filtered.map(o => `
+      <tr>
+        <td>
+          <span style="font-family:var(--font-mono);font-size:12px;font-weight:700;color:var(--blue)">${o.orderNumber}</span>
+        </td>
+        <td>
+          <div style="font-size:13px;font-weight:600">${o.shipping?.name || '—'}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${o.shipping?.email || o.guestEmail || ''}</div>
+          <div style="font-size:11px;color:var(--text-muted)">${o.shipping?.country || ''}</div>
+        </td>
+        <td style="font-size:13px">${o.items?.length || 0} item${(o.items?.length||0)!==1?'s':''}</td>
+        <td style="font-weight:700">${SAS.utils.formatPrice(o.total)}</td>
+        <td>
+          <span class="badge ${SAS.utils.getStatusBadgeClass(o.paymentStatus)}">${SAS.utils.getStatusLabel(o.paymentStatus)}</span>
+          ${o.paymentProof?.url ? `<div style="margin-top:4px;display:flex;gap:4px"><button type="button" onclick="openOrderProof('${o._id}', false)" style="background:none;border:none;padding:0;color:var(--blue);cursor:pointer;font-size:11px;font-weight:600;text-decoration:underline">View</button><button type="button" onclick="openOrderProof('${o._id}', true)" style="background:none;border:none;padding:0;color:var(--blue);cursor:pointer;font-size:11px;font-weight:600;text-decoration:underline">Download</button></div>` : ''}
+        </td>
+        <td><span class="badge ${SAS.utils.getStatusBadgeClass(o.orderStatus)}">${SAS.utils.getStatusLabel(o.orderStatus)}</span></td>
+        <td style="font-size:12px;color:var(--text-muted);white-space:nowrap">${SAS.utils.formatDate(o.createdAt)}</td>
+            <td>
+              <div style="display:flex;gap:6px">
+                <button class="btn btn-secondary btn-sm" onclick="openOrderModal(${JSON.stringify(o).replace(/"/g,'&quot;')})" title="Edit order">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
+                  Edit
+                </button>
+                <button class="btn btn-danger btn-sm" onclick="confirmDeleteOrder('${o._id}')" title="Delete order">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2"/></svg>
+                  Delete
+                </button>
+              </div>
+            </td>
+      </tr>
+    `).join('');
+
+    renderPagination(pagination);
+  } catch (err) {
+    tbody.innerHTML = `<tr><td colspan="8" style="text-align:center;padding:40px;color:var(--text-muted)">Failed to load orders: ${err.message}</td></tr>`;
+  }
+}
+
+function renderPagination({ page, pages }) {
+  const el = document.getElementById('ordersPagination');
+  if (!el || pages <= 1) { if (el) el.innerHTML = ''; return; }
+  let h = `<button class="page-btn" onclick="loadOrders(${page-1})" ${page===1?'disabled':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="15 18 9 12 15 6"/></svg></button>`;
+  for (let i = Math.max(1,page-2); i <= Math.min(pages,page+2); i++) {
+    h += `<button class="page-btn ${i===page?'active':''}" onclick="loadOrders(${i})">${i}</button>`;
+  }
+  h += `<button class="page-btn" onclick="loadOrders(${page+1})" ${page===pages?'disabled':''}><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="9 18 15 12 9 6"/></svg></button>`;
+  el.innerHTML = h;
+}
+
+function openOrderModal(order) {
+  currentOrderId = order._id;
+  document.getElementById('modalTitle').textContent = `Order ${order.orderNumber}`;
+  document.getElementById('modalBody').innerHTML = `
+    <!-- Order summary -->
+    <div style="background:var(--bg-elevated);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5)">
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);font-size:13px">
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Customer</div><div style="font-weight:700">${order.shipping?.name||'—'}</div></div>
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Email</div><div style="font-weight:600;word-break:break-all">${order.shipping?.email||order.guestEmail||'—'}</div></div>
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Total</div><div style="font-weight:700;color:var(--blue)">${SAS.utils.formatPrice(order.total)}</div></div>
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Payment Method</div><div style="font-weight:600;text-transform:capitalize">${order.paymentMethod}</div></div>
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Date</div><div style="font-weight:600">${SAS.utils.formatDateTime(order.createdAt)}</div></div>
+        <div><div style="color:var(--text-muted);margin-bottom:3px">Country</div><div style="font-weight:600">${order.shipping?.country||'—'}</div></div>
+      </div>
+    </div>
+
+    <!-- Items -->
+    <div style="margin-bottom:var(--space-5)">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:var(--space-3)">Items</div>
+      ${(order.items||[]).map(i=>`
+        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3) 0;border-bottom:1px solid var(--divider);font-size:13px">
+          <div>
+            <div style="font-weight:600">${i.name}</div>
+            <div style="color:var(--text-muted);font-size:11px">SKU: ${i.sku||'—'} &bull; Qty: ${i.quantity}</div>
+          </div>
+          <div style="font-weight:700">${SAS.utils.formatPrice(i.price * i.quantity)}</div>
+        </div>
+      `).join('')}
+    </div>
+
+    <!-- Payment proof -->
+    ${order.paymentProof?.url ? `
+    <div style="margin-bottom:var(--space-5)">
+      <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--text-muted);margin-bottom:var(--space-3)">Payment Proof</div>
+      <div style="display:flex;align-items:center;gap:var(--space-3);flex-wrap:wrap">
+        <button type="button" onclick="openOrderProof('${order._id}', false)" class="btn btn-outline btn-sm">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+          View
+        </button>
+        <button type="button" onclick="openOrderProof('${order._id}', true)" class="btn btn-outline btn-sm">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download
+        </button>
+        <span style="font-size:12px;color:var(--text-muted)">Uploaded ${order.paymentProof.uploadedAt ? SAS.utils.formatDateTime(order.paymentProof.uploadedAt) : ''}</span>
+      </div>
+      ${order.paymentProof.note ? `<div style="font-size:13px;color:var(--text-secondary);margin-top:var(--space-2);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md)">Note: "${order.paymentProof.note}"</div>` : ''}
+    </div>` : `
+    <div style="margin-bottom:var(--space-5);padding:var(--space-3);background:var(--bg-elevated);border-radius:var(--radius-md);color:var(--text-muted);font-size:13px">
+      No payment proof uploaded yet. Customer can submit proof via the payment upload page.
+    </div>`}
+
+    <!-- Status update form -->
+    <div style="border-top:1px solid var(--border);padding-top:var(--space-5)">
+      <div style="font-size:14px;font-weight:700;margin-bottom:var(--space-4)">Update Order</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-4);margin-bottom:var(--space-4)">
+        <div class="form-group">
+          <label class="form-label">Order Status</label>
+          <select id="editOrderStatus" class="form-input" style="height:40px">
+            ${['pending','processing','shipped','delivered','cancelled'].map(s=>`<option value="${s}" ${order.orderStatus===s?'selected':''}>${SAS.utils.getStatusLabel(s)}</option>`).join('')}
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Payment Status</label>
+          <select id="editPaymentStatus" class="form-input" style="height:40px">
+            ${['pending','under_review','confirmed','failed'].map(s=>`<option value="${s}" ${order.paymentStatus===s?'selected':''}>${SAS.utils.getStatusLabel(s)}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+
+      <div style="background:var(--bg-elevated);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-4)">
+        <div style="font-size:13px;font-weight:700;margin-bottom:var(--space-3)">Tracking Information</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:var(--space-3);margin-bottom:var(--space-3)">
+          <div class="form-group">
+            <label class="form-label">Tracking Number</label>
+            <input type="text" id="editTrackingNum" class="form-input" style="height:36px" placeholder="e.g. 1Z999AA1..." value="${order.tracking?.number||''}">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Carrier / Provider</label>
+            <input type="text" id="editTrackingProvider" class="form-input" style="height:36px" placeholder="Carrier name e.g. DHL, FedEx, UPS..." value="${order.tracking?.provider||''}">
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tracking URL</label>
+          <input type="url" id="editTrackingUrl" class="form-input" style="height:36px" placeholder="https://track.carrier.com/..." value="${order.tracking?.url||''}">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Admin Notes (internal)</label>
+        <textarea id="editAdminNotes" class="form-input" rows="2" style="resize:vertical" placeholder="Internal notes, not visible to customer...">${order.adminNotes||''}</textarea>
+      </div>
+    </div>
+  `;
+  document.getElementById('orderModal').style.display = 'flex';
+}
+
+function closeModal() {
+  document.getElementById('orderModal').style.display = 'none';
+  currentOrderId = null;
+}
+
+async function saveOrder() {
+  if (!currentOrderId) return;
+  const btn = document.getElementById('modalSaveBtn');
+  btn.disabled = true; btn.textContent = 'Saving…';
+
+  const orderStatus   = document.getElementById('editOrderStatus').value;
+  const paymentStatus = document.getElementById('editPaymentStatus').value;
+  const adminNotes    = document.getElementById('editAdminNotes').value.trim();
+  const trackingNum   = document.getElementById('editTrackingNum').value.trim();
+  const trackingProv  = document.getElementById('editTrackingProvider').value.trim();
+  const trackingUrl   = document.getElementById('editTrackingUrl').value.trim();
+
+  try {
+    await SAS.ordersAPI.updateStatus(currentOrderId, { orderStatus, paymentStatus, adminNotes });
+
+    if (trackingNum) {
+      await SAS.ordersAPI.updateTracking(currentOrderId, {
+        number:   trackingNum,
+        provider: trackingProv,
+        url:      trackingUrl,
+      });
+    }
+
+    SAS.toast.success('Order updated successfully');
+    closeModal();
+    loadOrders(currentPage);
+  } catch (err) {
+    SAS.toast.error(err.message || 'Failed to save order');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Save Changes';
+  }
+}
+
+async function confirmDeleteOrder(id) {
+  if (!id) return;
+  if (!confirm('Delete this order? This action cannot be undone.')) return;
+  try {
+    await SAS.ordersAPI.deleteOrder(id);
+    SAS.toast.success('Order deleted');
+    loadOrders(currentPage);
+  } catch (err) {
+    SAS.toast.error(err.message || 'Failed to delete order');
+  }
+}
+
+function getAdminToken() {
+  return localStorage.getItem('sas_access_token');
+}
+
+function getProofUrl(orderId, download = false) {
+  return `${window.ENV.API_URL}/orders/${orderId}/proof${download ? '?download=true' : ''}`;
+}
+
+async function openOrderProof(orderId, download = false) {
+  const token = getAdminToken();
+  if (!token) {
+    SAS.toast.error('You must be logged in as admin to view payment proof');
+    return;
+  }
+
+  const url = getProofUrl(orderId, download);
+  const newTab = window.open('', '_blank');
+  if (!newTab) {
+    SAS.toast.error('Unable to open proof viewer. Please allow popups for this site.');
+    return;
+  }
+
+  try {
+    const response = await fetch(url, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      const errorData = errorText ? JSON.parse(errorText || '{}') : null;
+      const message = errorData?.message || `Unable to load proof (${response.status})`;
+      newTab.close();
+      SAS.toast.error(message);
+      return;
+    }
+
+    const blob = await response.blob();
+    const blobUrl = URL.createObjectURL(blob);
+
+    if (download) {
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = `payment-proof-${orderId}.${blob.type.split('/').pop() || 'bin'}`;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(blobUrl);
+      newTab.close();
+      return;
+    }
+
+    newTab.location = blobUrl;
+    setTimeout(() => URL.revokeObjectURL(blobUrl), 60000);
+  } catch (err) {
+    if (newTab) newTab.close();
+    SAS.toast.error(err.message || 'Failed to load payment proof');
+  }
+}
+
+document.addEventListener('DOMContentLoaded', async () => {
+  await new Promise(r => setTimeout(r, 300));
+  if (!SAS.auth.isAdmin) { window.location.href = '/pages/login.html'; return; }
+
+  // Read URL params
+  const urlParams = new URLSearchParams(window.location.search);
+  if (urlParams.get('paymentStatus')) {
+    document.getElementById('paymentFilter').value = urlParams.get('paymentStatus');
+  }
+
+  loadOrders(1);
+});
+</script>
+</body>
+</html>

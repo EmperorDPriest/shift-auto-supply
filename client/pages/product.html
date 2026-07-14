@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="pageTitle">Product — Shift Auto Supply</title>
+  <meta name="description" id="metaDesc" content="Premium auto parts at Shift Auto Supply">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .pdp-layout { display:grid; grid-template-columns:1fr 440px; gap:var(--space-12); align-items:start; padding:var(--space-8) 0 var(--space-16); }
+    .pdp-gallery { position:sticky; top:80px; }
+    .pdp-main-img { aspect-ratio:1; background:var(--bg-elevated); border-radius:var(--radius-xl); overflow:hidden; border:1px solid var(--border); cursor:zoom-in; position:relative; }
+    .pdp-main-img img { width:100%; height:100%; object-fit:cover; transition:transform .4s ease; }
+    .pdp-main-img:hover img { transform:scale(1.05); }
+    .pdp-thumbs { display:flex; gap:var(--space-3); margin-top:var(--space-3); }
+    .pdp-thumb { width:80px; height:80px; border-radius:var(--radius-md); background:var(--bg-elevated); border:2px solid var(--border); overflow:hidden; cursor:pointer; transition:border-color var(--transition-fast); flex-shrink:0; }
+    .pdp-thumb.active { border-color:var(--blue); }
+    .pdp-thumb img { width:100%; height:100%; object-fit:cover; }
+    .pdp-info { }
+    .pdp-brand { font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--blue); margin-bottom:var(--space-2); }
+    .pdp-title { font-size:clamp(20px,3vw,28px); font-weight:800; letter-spacing:-0.02em; line-height:1.2; margin-bottom:var(--space-3); }
+    .pdp-meta { display:flex; align-items:center; gap:var(--space-4); flex-wrap:wrap; margin-bottom:var(--space-5); padding-bottom:var(--space-5); border-bottom:1px solid var(--border); }
+    .pdp-sku { font-size:12px; color:var(--text-muted); font-family:var(--font-mono); }
+    .pdp-price-block { margin-bottom:var(--space-6); }
+    .pdp-price-sale { font-size:38px; font-weight:800; color:var(--crimson); font-family:var(--font-head); letter-spacing:-0.03em; line-height:1; }
+    .pdp-price-original { font-size:20px; color:var(--text-muted); text-decoration:line-through; margin-left:var(--space-3); }
+    .pdp-price-current { font-size:38px; font-weight:800; color:var(--text-primary); font-family:var(--font-head); letter-spacing:-0.03em; line-height:1; }
+    .pdp-save-badge { display:inline-flex; align-items:center; padding:4px 10px; background:var(--crimson-50); color:var(--crimson); border-radius:var(--radius-full); font-size:12px; font-weight:700; margin-left:var(--space-3); }
+    .pdp-stock { display:flex; align-items:center; gap:6px; font-size:13px; font-weight:600; margin-top:var(--space-3); }
+    .stock-dot { width:8px; height:8px; border-radius:50%; }
+    .stock-dot.in  { background:#22C55E; box-shadow:0 0 6px rgba(34,197,94,.5); }
+    .stock-dot.low { background:#F59E0B; }
+    .stock-dot.out { background:var(--neutral-400); }
+    .pdp-qty-row { display:flex; align-items:center; gap:var(--space-4); margin-bottom:var(--space-5); }
+    .pdp-qty-label { font-size:13px; font-weight:600; color:var(--text-secondary); }
+    .pdp-actions { display:flex; flex-direction:column; gap:var(--space-3); margin-bottom:var(--space-6); }
+    .pdp-compat { background:var(--bg-elevated); border-radius:var(--radius-lg); padding:var(--space-5); margin-bottom:var(--space-5); }
+    .pdp-compat-title { font-size:13px; font-weight:700; color:var(--text-primary); margin-bottom:var(--space-3); display:flex; align-items:center; gap:6px; }
+    .compat-tag { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; background:var(--bg-card); border:1px solid var(--border); border-radius:var(--radius-full); font-size:12px; font-weight:500; color:var(--text-secondary); }
+    .pdp-tabs { border-bottom:1px solid var(--border); display:flex; gap:0; margin-bottom:var(--space-6); }
+    .pdp-tab { padding:12px var(--space-5); font-size:14px; font-weight:600; color:var(--text-muted); border-bottom:2px solid transparent; cursor:pointer; transition:all var(--transition-fast); }
+    .pdp-tab:hover { color:var(--text-primary); }
+    .pdp-tab.active { color:var(--blue); border-bottom-color:var(--blue); }
+    .pdp-tab-panel { display:none; }
+    .pdp-tab-panel.active { display:block; }
+    .spec-row { display:flex; padding:var(--space-3) 0; border-bottom:1px solid var(--divider); font-size:14px; }
+    .spec-row:last-child { border-bottom:none; }
+    .spec-key { color:var(--text-secondary); width:45%; flex-shrink:0; }
+    .spec-val { font-weight:600; color:var(--text-primary); }
+    .review-form-card { background:var(--bg-elevated); border-radius:var(--radius-lg); padding:var(--space-5); margin-bottom:var(--space-6); }
+    .stars-input { display:flex; gap:4px; margin-bottom:var(--space-4); }
+    .star-input { cursor:pointer; color:var(--neutral-300); transition:color var(--transition-fast); }
+    .star-input:hover, .star-input.active { color:#F59E0B; }
+    @media(max-width:900px){ .pdp-layout{grid-template-columns:1fr;} .pdp-gallery{position:static;} }
+    @media(max-width:480px){ .pdp-actions{flex-direction:column;} }
+  </style>
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <button class="mobile-nav-btn" onclick="SAS.openDrawer('mobileMenuDrawer')">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+    </button>
+    <a href="/" class="site-logo">
+      <div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div>
+      <div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div>
+    </a>
+    <div class="header-search">
+      <input type="search" id="headerSearch" placeholder="Search parts..." autocomplete="off" onkeydown="if(event.key==='Enter')window.location.href='/pages/shop.html?q='+this.value">
+      <button class="header-search-btn" onclick="window.location.href='/pages/shop.html?q='+document.getElementById('headerSearch').value">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      </button>
+    </div>
+    <div class="header-actions">
+      <button class="theme-toggle" aria-label="Toggle dark mode"></button>
+      <a href="/pages/dashboard.html" class="header-btn" data-auth-show style="display:none"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <a href="/pages/login.html" class="header-btn" data-guest-show><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg></a>
+      <button class="header-btn" onclick="SAS.openDrawer('cartDrawer')">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+        <span class="cart-badge" data-cart-count>0</span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="container">
+  <nav class="breadcrumb" style="padding:var(--space-5) 0 0">
+    <a href="/">Home</a>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <a href="/pages/shop.html">Shop</a>
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+    <span id="breadcrumbName">Loading…</span>
+  </nav>
+
+  <!-- Loading skeleton -->
+  <div id="productSkeleton" class="pdp-layout">
+    <div class="pdp-gallery">
+      <div class="skeleton" style="aspect-ratio:1;border-radius:var(--radius-xl)"></div>
+      <div style="display:flex;gap:12px;margin-top:12px">
+        <div class="skeleton" style="width:80px;height:80px;border-radius:var(--radius-md)"></div>
+        <div class="skeleton" style="width:80px;height:80px;border-radius:var(--radius-md)"></div>
+      </div>
+    </div>
+    <div class="pdp-info" style="display:flex;flex-direction:column;gap:16px">
+      <div class="skeleton" style="height:12px;width:80px;border-radius:4px"></div>
+      <div class="skeleton" style="height:32px;width:90%;border-radius:6px"></div>
+      <div class="skeleton" style="height:24px;width:60%;border-radius:6px"></div>
+      <div class="skeleton" style="height:48px;border-radius:12px"></div>
+      <div class="skeleton" style="height:48px;border-radius:12px"></div>
+      <div class="skeleton" style="height:100px;border-radius:12px"></div>
+    </div>
+  </div>
+
+  <!-- Product Content (hidden until loaded) -->
+  <div id="productContent" class="pdp-layout" style="display:none"></div>
+</div>
+
+<!-- Drawers -->
+<div class="drawer-overlay"></div>
+<div class="drawer" id="cartDrawer">
+  <div class="drawer-header">
+    <h3>Cart <span style="color:var(--text-muted);font-weight:400;font-size:14px" data-cart-items-count></span></h3>
+    <button class="drawer-close" onclick="SAS.closeDrawer('cartDrawer')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+  </div>
+  <div class="drawer-body" id="cartDrawerItems"></div>
+  <div class="drawer-footer">
+    <div id="cartDrawerSummary" style="margin-bottom:var(--space-4)"></div>
+    <a href="/pages/checkout.html" class="btn btn-primary btn-full btn-lg">Proceed to Checkout</a>
+  </div>
+</div>
+<div class="drawer left" id="mobileMenuDrawer" style="width:min(300px,92vw)">
+  <div class="drawer-header"><h3>Menu</h3><button class="drawer-close" onclick="SAS.closeDrawer('mobileMenuDrawer')"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button></div>
+  <div class="drawer-body" style="padding:0">
+    <a href="/" class="mobile-menu-link" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);border-bottom:1px solid var(--divider);text-decoration:none">Home</a>
+    <a href="/pages/shop.html" class="mobile-menu-link" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);border-bottom:1px solid var(--divider);text-decoration:none">Shop</a>
+    <a href="/pages/contact.html" class="mobile-menu-link" style="display:block;padding:13px 24px;font-size:15px;font-weight:500;color:var(--text-primary);text-decoration:none">Contact</a>
+  </div>
+  <div class="drawer-footer">
+    <a href="/pages/login.html" class="btn btn-primary btn-full" data-guest-show>Sign In</a>
+    <button onclick="SAS.auth.logout()" class="btn btn-secondary btn-full" data-auth-show style="display:none">Sign Out</button>
+  </div>
+</div>
+
+<a href="/pages/contact.html" class="float-support"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></a>
+<div class="sticky-cart-bar" style="display:none">
+  <button class="btn btn-secondary" onclick="SAS.openDrawer('cartDrawer')">Cart (<span data-cart-count>0</span>)</button>
+  <a href="/pages/checkout.html" class="btn btn-primary flex-1">Checkout — <span data-cart-total>$0.00</span></a>
+</div>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+let currentProduct = null;
+let selectedQty    = 1;
+let selectedImg    = 0;
+let selectedRating = 0;
+
+async function loadProduct() {
+  const slug = new URLSearchParams(window.location.search).get('slug');
+  if (!slug) { window.location.href = '/pages/shop.html'; return; }
+
+  try {
+    const res    = await SAS.productsAPI.getOne(slug);
+    currentProduct = res.data;
+    renderProduct(currentProduct);
+    loadReviews(currentProduct._id);
+    updateMeta(currentProduct);
+    document.getElementById('productSkeleton').style.display = 'none';
+    document.getElementById('productContent').style.display  = 'grid';
+    saveRecentlyViewed(currentProduct);
+  } catch {
+    document.getElementById('productSkeleton').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--text-muted)">
+      <h3 style="font-size:20px;margin-bottom:8px">Product not found</h3>
+      <p>This part may no longer be available.</p>
+      <a href="/pages/shop.html" class="btn btn-primary btn-sm" style="margin-top:16px">Browse All Parts</a>
+    </div>`;
+  }
+}
+
+function renderProduct(p) {
+  const price    = p.salePrice && p.salePrice < p.price ? p.salePrice : p.price;
+  const isOnSale = p.salePrice && p.salePrice < p.price;
+  const oos      = p.stock === 0;
+  const lowStock = p.stock > 0 && p.stock <= 5;
+  const pct      = isOnSale ? Math.round(((p.price - p.salePrice) / p.price) * 100) : 0;
+
+  document.getElementById('breadcrumbName').textContent = p.name;
+
+  const imgs = p.images?.length ? p.images : [null];
+
+  const html = `
+    <!-- Gallery -->
+    <div class="pdp-gallery">
+      <div class="pdp-main-img" id="mainImgWrap">
+        ${imgs[0]?.url
+          ? `<img src="${imgs[0].url}" alt="${p.name}" id="mainImg">`
+          : `<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;color:var(--text-muted)"><svg width="72" height="72" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21 15 16 10 5 21"/></svg></div>`
+        }
+        ${isOnSale ? `<div style="position:absolute;top:16px;left:16px"><span class="badge badge-crimson" style="font-size:13px;padding:6px 12px">-${pct}% OFF</span></div>` : ''}
+      </div>
+      ${imgs.length > 1 ? `
+      <div class="pdp-thumbs">
+        ${imgs.map((img, i) => `
+          <div class="pdp-thumb ${i===0?'active':''}" onclick="switchImage(${i})" id="thumb_${i}">
+            ${img?.url ? `<img src="${img.url}" alt="View ${i+1}">` : ''}
+          </div>
+        `).join('')}
+      </div>` : ''}
+    </div>
+
+    <!-- Info -->
+    <div class="pdp-info">
+      <div class="pdp-brand">${p.brand}</div>
+      <h1 class="pdp-title">${p.name}</h1>
+
+      <div class="pdp-meta">
+        <span class="pdp-sku">SKU: ${p.sku}</span>
+        ${p.averageRating > 0 ? `
+          <div style="display:flex;align-items:center;gap:6px">
+            <div class="stars">${Array.from({length:5},(_,i)=>`<svg class="star ${i<Math.round(p.averageRating)?'':'empty'}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="${i<Math.round(p.averageRating)?'currentColor':'none'}" stroke="currentColor" stroke-width="1.5"/></svg>`).join('')}</div>
+            <span style="font-size:13px;font-weight:600">${p.averageRating}</span>
+            <a href="#reviews" style="font-size:13px;color:var(--blue)">(${p.reviewCount} reviews)</a>
+          </div>` : ''}
+        <span class="badge badge-gray" style="text-transform:capitalize">${p.condition}</span>
+        ${p.isFeatured ? `<span class="badge badge-blue">Featured</span>` : ''}
+      </div>
+
+      <!-- Price -->
+      <div class="pdp-price-block">
+        <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px">
+          ${isOnSale
+            ? `<span class="pdp-price-sale">${SAS.utils.formatPrice(p.salePrice)}</span>
+               <span class="pdp-price-original">${SAS.utils.formatPrice(p.price)}</span>
+               <span class="pdp-save-badge">Save ${SAS.utils.formatPrice(p.price - p.salePrice)}</span>`
+            : `<span class="pdp-price-current">${SAS.utils.formatPrice(price)}</span>`
+          }
+        </div>
+        <div class="pdp-stock">
+          <div class="stock-dot ${oos?'out':lowStock?'low':'in'}"></div>
+          <span style="color:${oos?'var(--text-muted)':lowStock?'#D97706':'#22C55E'}">
+            ${oos ? 'Out of Stock' : lowStock ? `Only ${p.stock} left in stock` : 'In Stock — Ready to Ship'}
+          </span>
+        </div>
+        <div style="margin-top:var(--space-3);display:flex;align-items:center;gap:var(--space-3);font-size:13px;color:var(--text-muted)">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          Global shipping available worldwide
+        </div>
+      </div>
+
+      <!-- Quantity -->
+      ${!oos ? `
+      <div class="pdp-qty-row">
+        <span class="pdp-qty-label">Quantity</span>
+        <div class="qty-control">
+          <button class="qty-btn" onclick="changeQty(-1)">−</button>
+          <span class="qty-value" id="qtyDisplay">1</span>
+          <button class="qty-btn" onclick="changeQty(1)">+</button>
+        </div>
+        <span style="font-size:12px;color:var(--text-muted)">(Max ${p.stock})</span>
+      </div>` : ''}
+
+      <!-- Actions -->
+      <div class="pdp-actions">
+        <button class="btn btn-primary btn-xl btn-full" onclick="addToCart()" ${oos?'disabled':''} id="addToCartBtn">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
+          ${oos ? 'Out of Stock' : 'Add to Cart'}
+        </button>
+        <a href="/pages/checkout.html" class="btn btn-outline btn-xl btn-full" onclick="if(!oos){SAS.cart.add(currentProduct,selectedQty)}" ${oos?'style="pointer-events:none;opacity:.4"':''}>
+          Buy Now — ${SAS.utils.formatPrice(price)}
+        </a>
+      </div>
+
+      <!-- Compatibility -->
+      ${p.vehicleModels?.length ? `
+      <div class="pdp-compat">
+        <div class="pdp-compat-title">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 11 12 14 22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+          Compatible Vehicles
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:var(--space-2)">
+          ${p.vehicleModels.map(v=>`<span class="compat-tag">${v.brand} ${v.model}${v.yearFrom?` (${v.yearFrom}${v.yearTo&&v.yearTo!==v.yearFrom?'–'+v.yearTo:''})`:''}</span>`).join('')}
+        </div>
+      </div>` : ''}
+
+      <!-- Trust microcopy -->
+      <div style="display:flex;flex-direction:column;gap:var(--space-3);padding:var(--space-5);background:var(--bg-elevated);border-radius:var(--radius-lg)">
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:13px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span>Payment manually verified by our team</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:13px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          <span>Global shipping worldwide</span>
+        </div>
+        <div style="display:flex;align-items:center;gap:var(--space-3);font-size:13px">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--blue)" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+          <span>Support responds within 2–4 hours</span>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('productContent').innerHTML = html;
+
+  // Tabs + description below (full width)
+  const tabsHtml = `
+    <div style="grid-column:1/-1;margin-top:var(--space-8);border-top:1px solid var(--border);padding-top:var(--space-8)">
+      <div class="pdp-tabs">
+        <div class="pdp-tab active" onclick="switchTab('desc',this)">Description</div>
+        <div class="pdp-tab" onclick="switchTab('specs',this)">Specifications</div>
+        <div class="pdp-tab" onclick="switchTab('shipping',this)">Shipping</div>
+        <div class="pdp-tab" onclick="switchTab('reviews',this)" id="reviewsTabBtn">Reviews (${p.reviewCount || 0})</div>
+      </div>
+
+      <div class="pdp-tab-panel active" id="tab-desc">
+        <div style="font-size:15px;line-height:1.8;color:var(--text-secondary);max-width:720px">${p.description || 'No description available.'}</div>
+      </div>
+
+      <div class="pdp-tab-panel" id="tab-specs">
+        ${p.specifications?.length
+          ? `<div style="max-width:600px">${p.specifications.map(s=>`<div class="spec-row"><span class="spec-key">${s.key}</span><span class="spec-val">${s.value}</span></div>`).join('')}</div>`
+          : `<p style="color:var(--text-muted)">No specifications listed for this part.</p>`
+        }
+      </div>
+
+      <div class="pdp-tab-panel" id="tab-shipping">
+        <div style="max-width:640px">
+          <div class="alert alert-info" style="margin-bottom:var(--space-5)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+            <div>International shipping available worldwide.</div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:var(--space-4);font-size:14px">
+            <div class="spec-row"><span class="spec-key">Shipping</span><span class="spec-val">Worldwide delivery available</span></div>
+            <div class="spec-row"><span class="spec-key">Destinations</span><span class="spec-val">50+ countries worldwide</span></div>
+            <div class="spec-row"><span class="spec-key">Processing Time</span><span class="spec-val">1–2 business days after payment confirmation</span></div>
+            <div class="spec-row"><span class="spec-key">Tracking</span><span class="spec-val">Full tracking number provided on shipment</span></div>
+            <div class="spec-row"><span class="spec-key">Returns</span><span class="spec-val">30-day return policy on unused parts</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="pdp-tab-panel" id="tab-reviews" id="reviews">
+        <div id="reviewsList" style="max-width:720px;display:flex;flex-direction:column;gap:var(--space-5)">
+          <p style="color:var(--text-muted)">Loading reviews…</p>
+        </div>
+
+        <div class="review-form-card" style="max-width:560px;margin-top:var(--space-8)">
+          <h3 style="font-size:16px;font-weight:700;margin-bottom:var(--space-4)">Write a Review</h3>
+          <div class="form-group">
+            <label class="form-label">Your Rating</label>
+            <div class="stars-input" id="ratingInput">
+              ${[1,2,3,4,5].map(n=>`<svg class="star-input" data-rating="${n}" width="28" height="28" viewBox="0 0 24 24" onclick="setRating(${n})"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="none" stroke="#F59E0B" stroke-width="1.5"/></svg>`).join('')}
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input type="text" id="reviewTitle" class="form-input" placeholder="Summarize your experience">
+          </div>
+          ${!SAS.auth?.isLoggedIn ? `<div class="form-group"><label class="form-label">Your Name</label><input type="text" id="reviewName" class="form-input" placeholder="John S."></div>` : ''}
+          <div class="form-group">
+            <label class="form-label">Review <span style="color:var(--crimson)">*</span></label>
+            <textarea id="reviewBody" class="form-input" rows="4" placeholder="Tell us about this part — quality, fitment, installation..." style="resize:vertical"></textarea>
+          </div>
+          <button class="btn btn-primary" onclick="submitReview()">Submit Review</button>
+        </div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById('productContent').innerHTML += tabsHtml;
+}
+
+function switchImage(idx) {
+  const imgs = currentProduct.images;
+  if (!imgs?.[idx]?.url) return;
+  selectedImg = idx;
+  document.getElementById('mainImg').src = imgs[idx].url;
+  document.querySelectorAll('[id^="thumb_"]').forEach(t => t.classList.remove('active'));
+  document.getElementById(`thumb_${idx}`)?.classList.add('active');
+}
+
+function switchTab(id, btn) {
+  document.querySelectorAll('.pdp-tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.pdp-tab-panel').forEach(p => p.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  document.getElementById(`tab-${id}`)?.classList.add('active');
+}
+
+function changeQty(delta) {
+  selectedQty = Math.max(1, Math.min(currentProduct.stock, selectedQty + delta));
+  document.getElementById('qtyDisplay').textContent = selectedQty;
+}
+
+function addToCart() {
+  if (!currentProduct) return;
+  SAS.cart.add(currentProduct, selectedQty);
+  SAS.cart.renderItems(document.getElementById('cartDrawerItems'));
+  SAS.cart.renderSummary(document.getElementById('cartDrawerSummary'));
+  SAS.openDrawer('cartDrawer');
+  const btn = document.getElementById('addToCartBtn');
+  btn.textContent = 'Added!';
+  setTimeout(() => { btn.innerHTML = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg> Add to Cart'; }, 2000);
+}
+
+async function loadReviews(productId) {
+  try {
+    const res     = await SAS.reviewsAPI.getAll({ product: productId });
+    const reviews = res.data.reviews;
+    const list    = document.getElementById('reviewsList');
+    if (!list) return;
+    if (!reviews.length) { list.innerHTML = '<p style="color:var(--text-muted)">No reviews yet. Be the first!</p>'; return; }
+    list.innerHTML = reviews.map(r => `
+      <div class="review-card">
+        <div class="review-header">
+          <div class="review-author">
+            <div class="review-avatar">${(r.user?.name || r.guestName || 'A')[0].toUpperCase()}</div>
+            <div>
+              <div class="review-author-name">${r.user?.name || r.guestName || 'Customer'}</div>
+              <div class="review-author-date">${SAS.utils.formatDate(r.createdAt)}${r.isVerifiedPurchase?' · Verified Purchase':''}</div>
+            </div>
+          </div>
+          <div class="stars">${Array.from({length:5},(_,i)=>`<svg class="star ${i<r.rating?'':'empty'}" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" fill="${i<r.rating?'currentColor':'none'}" stroke="currentColor" stroke-width="1.5"/></svg>`).join('')}</div>
+        </div>
+        ${r.title ? `<div class="review-title">${r.title}</div>` : ''}
+        <div class="review-body">${r.body}</div>
+        ${r.isVerifiedPurchase ? `<div class="review-verified"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>Verified Purchase</div>` : ''}
+      </div>
+    `).join('');
+  } catch {}
+}
+
+function setRating(n) {
+  selectedRating = n;
+  document.querySelectorAll('.star-input').forEach((s, i) => {
+    s.style.fill = i < n ? '#F59E0B' : 'none';
+    s.querySelector('polygon').setAttribute('fill', i < n ? '#F59E0B' : 'none');
+  });
+}
+
+async function submitReview() {
+  if (!selectedRating) { SAS.toast.error('Please select a rating'); return; }
+  const body      = document.getElementById('reviewBody')?.value?.trim();
+  const title     = document.getElementById('reviewTitle')?.value?.trim();
+  const guestName = document.getElementById('reviewName')?.value?.trim();
+  if (!body) { SAS.toast.error('Please write a review'); return; }
+
+  try {
+    await SAS.reviewsAPI.create({ productId: currentProduct._id, rating: selectedRating, title, body, guestName });
+    SAS.toast.success('Review submitted! It will appear after moderation.');
+    document.getElementById('reviewBody').value = '';
+    document.getElementById('reviewTitle').value = '';
+    if (document.getElementById('reviewName')) document.getElementById('reviewName').value = '';
+    selectedRating = 0;
+    document.querySelectorAll('.star-input polygon').forEach(p => p.setAttribute('fill','none'));
+  } catch (err) {
+    SAS.toast.error(err.message || 'Failed to submit review');
+  }
+}
+
+function updateMeta(p) {
+  document.getElementById('pageTitle').textContent = `${p.name} — Shift Auto Supply`;
+  document.getElementById('metaDesc').content = `Buy ${p.name} (SKU: ${p.sku}) — ${p.brand} part. ${SAS.utils.formatPrice(p.salePrice||p.price)}. Global shipping available.`;
+}
+
+function saveRecentlyViewed(p) {
+  try {
+    let viewed = JSON.parse(localStorage.getItem('sas_recently_viewed') || '[]');
+    viewed = [{ _id:p._id, name:p.name, slug:p.slug, brand:p.brand, price:p.price, salePrice:p.salePrice, images:p.images }, ...viewed.filter(v=>v._id!==p._id)].slice(0,8);
+    localStorage.setItem('sas_recently_viewed', JSON.stringify(viewed));
+  } catch {}
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  loadProduct();
+  SAS.cart.on(() => {
+    SAS.cart.renderItems(document.getElementById('cartDrawerItems'));
+    SAS.cart.renderSummary(document.getElementById('cartDrawerSummary'));
+  });
+  SAS.cart.renderItems(document.getElementById('cartDrawerItems'));
+  SAS.cart.renderSummary(document.getElementById('cartDrawerSummary'));
+});
+</script>
+</body>
+</html>

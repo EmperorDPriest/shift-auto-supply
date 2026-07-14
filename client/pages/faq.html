@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FAQ — Shift Auto Supply</title>
+  <meta name="description" content="Frequently asked questions about ordering, payment, shipping, and returns at Shift Auto Supply.">
+    <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+  <meta name="theme-color" content="#0066CC">
+  <link rel="stylesheet" href="/css/design-system.css">
+  <link rel="stylesheet" href="/css/layout.css">
+  <link rel="stylesheet" href="/css/components.css">
+  <style>
+    .faq-page { max-width: 780px; margin: 0 auto; padding: var(--space-10) var(--space-5) var(--space-20); }
+    .faq-category { margin-bottom: var(--space-10); }
+    .faq-category-title { font-size: 16px; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; color: var(--blue); margin-bottom: var(--space-4); display: flex; align-items: center; gap: var(--space-3); }
+    .faq-category-title::after { content:''; flex:1; height:1px; background:var(--border); }
+    .faq-item { border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: var(--space-3); background: var(--bg-card); transition: border-color var(--transition-fast); }
+    .faq-item:hover { border-color: var(--border-strong); }
+    .faq-question { display: flex; align-items: center; justify-content: space-between; gap: var(--space-4); padding: var(--space-5) var(--space-5); cursor: pointer; font-size: 15px; font-weight: 600; color: var(--text-primary); user-select: none; }
+    .faq-question svg { flex-shrink: 0; color: var(--text-muted); transition: transform var(--transition-fast); }
+    .faq-item.open .faq-question svg { transform: rotate(180deg); }
+    .faq-item.open .faq-question { color: var(--blue); }
+    .faq-answer { display: none; padding: 0 var(--space-5) var(--space-5); font-size: 14px; line-height: 1.8; color: var(--text-secondary); }
+    .faq-item.open .faq-answer { display: block; }
+    .faq-answer a { color: var(--blue); font-weight: 600; }
+    .faq-answer strong { color: var(--text-primary); }
+    .faq-cta { background: linear-gradient(135deg, var(--blue) 0%, var(--blue-dark) 100%); border-radius: var(--radius-xl); padding: var(--space-10) var(--space-8); text-align: center; color: #fff; margin-top: var(--space-10); }
+  </style>
+  <script>window.ENV = { API_URL: 'http://localhost:5000/api/v1' };</script>
+</head>
+<body>
+<header class="header">
+  <div class="header-inner">
+    <a href="/" class="site-logo"><div class="site-logo-mark"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg></div><div class="site-logo-name"><span class="brand">Shift Auto</span><span class="tagline">Supply Co.</span></div></a>
+    <div style="flex:1"></div>
+    <div class="header-actions"><button class="theme-toggle" aria-label="Toggle dark mode"></button><a href="/pages/shop.html" class="btn btn-primary btn-sm">Shop Parts</a></div>
+  </div>
+</header>
+
+<div class="faq-page">
+  <nav class="breadcrumb" style="margin-bottom:var(--space-6)"><a href="/">Home</a><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg><span>FAQ</span></nav>
+  <div style="text-align:center;margin-bottom:var(--space-10)">
+    <div class="section-label" style="justify-content:center">Help Center</div>
+    <h1 style="font-size:clamp(26px,5vw,40px);font-weight:800;letter-spacing:-0.02em;margin-bottom:var(--space-3)">Frequently Asked Questions</h1>
+    <p style="font-size:16px;color:var(--text-secondary);max-width:480px;margin:0 auto">Everything you need to know about ordering, payment, and shipping.</p>
+  </div>
+
+  <!-- Ordering -->
+  <div class="faq-category">
+    <div class="faq-category-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/></svg> Ordering</div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Do I need an account to place an order?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">No account is required. We support <strong>guest checkout</strong> — simply enter your email and shipping address at checkout. However, creating an account lets you view your order history, track shipments, and save shipping addresses for faster future orders.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">How do I find the right part for my vehicle?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Use our <a href="/pages/bmw-finder.html">BMW Part Finder</a> to filter by model, year, and engine. You can also search by part name, SKU number, or VIN. Each product page lists compatible vehicle models. If you're unsure, <a href="/pages/contact.html">contact our team</a> — we'll help you confirm fitment.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">What condition are the parts in?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Each product listing shows its condition: <strong>New</strong> (OEM or aftermarket, unused), <strong>Used</strong> (tested, functional, clearly labeled), or <strong>Refurbished</strong> (inspected and restored to working condition). We never misrepresent part condition.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Can I modify or cancel my order?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Contact us as soon as possible at <a href="/pages/contact.html">our contact page</a>. If your payment has not yet been verified, we can modify or cancel your order. Once payment is confirmed and the order moves to processing, cancellation may not be possible. We process orders quickly after verification.</div></div>
+  </div>
+
+  <!-- Payment -->
+  <div class="faq-category">
+    <div class="faq-category-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="4" width="22" height="16" rx="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg> Payment</div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">What payment methods do you accept?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">We accept <strong>Zelle, PayPal (Friends & Family), Cash App, and Apple Pay</strong>. Payment method availability is controlled by our team — active methods are shown with a green indicator during checkout. Credit card processing is not currently available.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Why do I need to upload payment proof?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">We use a <strong>manual payment verification process</strong> for security and accuracy. After you place your order and send payment, you upload a screenshot or receipt as confirmation. Our team reviews it and confirms — this personal verification protects both you and us. It typically takes <strong>1–4 hours</strong> to verify.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">How long does payment verification take?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Verification typically takes <strong>1–4 hours</strong> during business hours (Mon–Sat, 9AM–8PM EST). For PayPal, bank transfers may take slightly longer depending on the processing time. Once confirmed, you'll receive an update and your order moves immediately to preparation.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Is it safe to send payment before receiving my parts?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Yes. We have been operating since 2019 with hundreds of satisfied customers across 50+ countries. Our manual verification process adds an extra layer of accountability. Every order is tracked, every customer receives shipping confirmation with a tracking number, and our return policy covers you if there's an issue.</div></div>
+  </div>
+
+  <!-- Shipping -->
+  <div class="faq-category">
+    <div class="faq-category-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="1" y="3" width="15" height="13"/><polygon points="16 8 20 8 23 11 23 16 16 16 16 8"/></svg> Shipping</div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Do you ship internationally?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Yes — we ship to <strong>50+ countries worldwide</strong>. Shipping costs and delivery times vary by destination. Our team personally arranges every shipment and will provide you with full carrier and tracking details upon dispatch. Contact us before ordering if you have questions about your specific country.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">How long does shipping take?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">After payment verification, orders are processed and shipped within <strong>1–2 business days</strong>. Domestic delivery typically takes 3–7 business days. International delivery ranges from 7–21 business days depending on destination and customs. You will receive a tracking number as soon as your order ships.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">How do I track my shipment?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Once your order ships, our team will personally provide you with the tracking number and carrier name. You can use our <a href="/pages/order-tracking.html">Order Tracking page</a> to follow the progress of your order. You can also reach out to us directly on <a href="https://www.facebook.com/share/1SoYSJPkMu/" target="_blank" rel="noopener">Facebook</a> for real-time updates. If you haven't received tracking information within 3 business days of payment confirmation, <a href="/pages/contact.html">contact us</a>.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">Are there import duties or customs fees?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">International orders may be subject to import duties and customs fees imposed by your country. These fees are the buyer's responsibility and are not included in our pricing. We recommend checking your local customs regulations before ordering. We accurately declare the value and contents of all shipments.</div></div>
+  </div>
+
+  <!-- Returns -->
+  <div class="faq-category">
+    <div class="faq-category-title"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 .49-3.51"/></svg> Returns &amp; Refunds</div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">What is your return policy?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">We offer a <strong>30-day return policy</strong> on unused parts in original condition. Used or refurbished parts are not eligible for return unless they arrive damaged or defective. To initiate a return, <a href="/pages/contact.html">contact us</a> with your order number and reason for return. See our full <a href="/pages/return-policy.html">Return Policy</a> for details.</div></div>
+    <div class="faq-item"><div class="faq-question" onclick="toggle(this)">What if my part arrives damaged or incorrect?<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg></div><div class="faq-answer">Contact us immediately with photos of the damaged or incorrect item. We will arrange a replacement or full refund at no cost to you. We take responsibility for shipping damage and incorrect orders seriously — this will be resolved quickly to your satisfaction.</div></div>
+  </div>
+
+  <!-- CTA -->
+  <div class="faq-cta">
+    <h2 style="font-size:24px;font-weight:800;margin-bottom:var(--space-3)">Still Have Questions?</h2>
+    <p style="color:rgba(255,255,255,.8);margin-bottom:var(--space-6);font-size:15px">Our team responds personally to every inquiry. We're here to help.</p>
+    <a href="/pages/contact.html" class="btn" style="background:rgba(255,255,255,.15);color:#fff;border:1.5px solid rgba(255,255,255,.3);padding:12px 28px;border-radius:var(--radius-lg);font-size:15px;font-weight:700">Contact Support</a>
+  </div>
+</div>
+
+<footer style="border-top:1px solid var(--border);padding:var(--space-8) 0;text-align:center">
+  <p style="font-size:13px;color:var(--text-muted)">&copy; <span id="yr"></span> Shift Auto Supply &bull; <a href="/pages/shipping-policy.html" style="color:var(--blue)">Shipping</a> &bull; <a href="/pages/return-policy.html" style="color:var(--blue)">Returns</a> &bull; <a href="/pages/privacy-policy.html" style="color:var(--blue)">Privacy</a></p>
+</footer>
+
+<script src="/js/core/api.js"></script>
+<script src="/js/core/auth.js"></script>
+<script src="/js/core/cart.js"></script>
+<script>
+document.getElementById('yr').textContent = new Date().getFullYear();
+function toggle(el) { el.closest('.faq-item').classList.toggle('open'); }
+</script>
+</body>
+</html>
