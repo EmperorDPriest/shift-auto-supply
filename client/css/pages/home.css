@@ -18,7 +18,11 @@
 .announcement-close:hover { color: #fff; }
 
 /* ─── Hero Section ──────────────────────────────────────── */
-.hero-section { position: relative; overflow: hidden; z-index: 1; }
+.hero-section { 
+   position: relative; 
+   overflow: hidden; 
+   z-index: 1; 
+}
 
 .hero-swiper { width: 100%; }
 
@@ -459,4 +463,10 @@
 @media (max-width: 640px) {
   .section-header.flex { flex-direction: column; align-items: flex-start; gap: var(--space-3); }
   .section-header h2 { font-size: clamp(20px, 5vw, 28px); }
+}
+
+@media (max-width: 768px) {
+  .hero-swiper .swiper-pagination {
+    display: none;
+  }
 }
