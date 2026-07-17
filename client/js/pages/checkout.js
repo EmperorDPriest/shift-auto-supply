@@ -139,39 +139,19 @@ function showMethodDetails(methodId) {
   const method = paymentMethods.find(m => m._id === methodId);
   if (!method) return;
 
-  // Show instructions as a small hint below the cards
-  let detailsHtml = '';
-  // If account values are not present (public list hides values), fetch details for this method
-  const hasValues = method.accountDetails?.some(d => d.value);
-  const renderDetails = (m) => {
-    if (!m.accountDetails?.length) return '';
-    return `<div style="margin-top:var(--space-4);padding:var(--space-4);background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md)">
-      <div style="font-size:12px;font-weight:700;color:var(--blue);margin-bottom:var(--space-2)">Payment details</div>
-      ${m.accountDetails.map(d => `
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px">
-          <div style="font-size:13px;color:var(--text-secondary)">${d.label}</div>
-          <div style="display:flex;align-items:center;gap:8px">
-            <div style="font-weight:700">${d.value || '—'}</div>
-            ${d.value ? `<button class="btn btn-ghost btn-sm" onclick="navigator.clipboard.writeText('${d.value}').then(()=>SAS.toast.success('Copied'))">Copy</button>` : ''}
-          </div>
-        </div>
-      `).join('')}
-      ${m.instructions ? `<div style="font-size:13px;color:var(--text-secondary);margin-top:6px">${m.instructions}</div>` : ''}
-    </div>`;
-  };
-
-  if (hasValues) {
-    detailsHtml += renderDetails(method);
-  } else {
-    // Fetch details for this specific method (server returns values only for active methods)
-    detailsHtml += `<div style="margin-top:var(--space-4);padding:var(--space-3);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md)">Loading payment details…</div>`;
-   // Account values are shown on the payment-upload page after order is placed
-   // Just show instructions here as a lightweight hint
-   const hintEl = document.getElementById('paymentMethodHint');
-   if (hintEl) hintEl.innerHTML = method.instructions
-     ? `<div style="margin-top:var(--space-4);padding:var(--space-4);background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md)"><div style="font-size:13px;color:var(--text-secondary)">${method.instructions}</div></div>`
-     : '';
+  let hint = document.getElementById('paymentMethodHint');
+  if (!hint) {
+    hint = document.createElement('div');
+    hint.id = 'paymentMethodHint';
+    document.getElementById('paymentMethodsList')?.after(hint);
   }
+
+  hint.innerHTML = method.instructions
+    ? `<div style="margin-top:var(--space-4);padding:var(--space-4);background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md)">
+        <div style="font-size:13px;color:var(--text-secondary)">${method.instructions}</div>
+       </div>`
+    : '';
+}
 
   // Inject below the payment list
   let hint = document.getElementById('paymentMethodHint');
