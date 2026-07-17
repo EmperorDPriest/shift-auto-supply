@@ -165,17 +165,12 @@ function showMethodDetails(methodId) {
   } else {
     // Fetch details for this specific method (server returns values only for active methods)
     detailsHtml += `<div style="margin-top:var(--space-4);padding:var(--space-3);background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-md)">Loading payment details…</div>`;
-    SAS.paymentsAPI.getMethodDetails(methodId).then(res => {
-      const full = res.data;
-      // Update local cache
-      const idx = paymentMethods.findIndex(x => x._id === methodId);
-      if (idx !== -1) paymentMethods[idx] = full;
-      const hintEl = document.getElementById('paymentMethodHint');
-      if (hintEl) hintEl.innerHTML = renderDetails(full);
-    }).catch(() => {
-      const hintEl = document.getElementById('paymentMethodHint');
-      if (hintEl) hintEl.innerHTML = `<div style="margin-top:var(--space-4);padding:var(--space-4);background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md)"><div style="font-size:13px;color:var(--text-secondary)">${method.instructions || 'Follow the instructions for this payment method.'}</div></div>`;
-    });
+   // Account values are shown on the payment-upload page after order is placed
+   // Just show instructions here as a lightweight hint
+   const hintEl = document.getElementById('paymentMethodHint');
+   if (hintEl) hintEl.innerHTML = method.instructions
+     ? `<div style="margin-top:var(--space-4);padding:var(--space-4);background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md)"><div style="font-size:13px;color:var(--text-secondary)">${method.instructions}</div></div>`
+     : '';
   }
 
   // Inject below the payment list
