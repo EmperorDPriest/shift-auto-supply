@@ -4,4 +4,4 @@ Disallow: /pages/admin/
 Disallow: /pages/checkout.html
 Disallow: /pages/payment-upload.html
 Disallow: /pages/dashboard.html
-Sitemap: https://shiftautosupply.com/sitemap.xml
+Sitemap: https://bmwshiftauto.store/sitemap.xml
