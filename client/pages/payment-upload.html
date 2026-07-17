@@ -421,17 +421,8 @@ async function submitProof() {
     const note = document.getElementById('paymentNote').value || '';
     if (note) formData.append('note', note);
 
-    console.log('Submitting proof upload:', {
-      orderId: pendingOrder.orderId,
-      fileName: selectedFile.name,
-      fileSize: selectedFile.size,
-      fileType: selectedFile.type,
-      note: note
-    });
-
     const response = await SAS.ordersAPI.uploadProof(pendingOrder.orderId, formData);
     
-    console.log('Upload response:', response);
     
     sessionStorage.removeItem('sas_pending_order');
     showSuccess();
@@ -457,11 +448,7 @@ async function markAsPaid() {
     const note = document.getElementById('paymentNote').value?.trim() || 'Customer marked as paid without proof upload';
     formData.append('note', note);
 
-    console.log('Submitting mark-as-paid:', { orderId: pendingOrder.orderId, note });
-
     const response = await SAS.ordersAPI.uploadProof(pendingOrder.orderId, formData);
-    
-    console.log('Mark-as-paid response:', response);
     
     sessionStorage.removeItem('sas_pending_order');
     showSuccess();
