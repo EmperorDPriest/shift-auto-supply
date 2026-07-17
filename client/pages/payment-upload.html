@@ -328,8 +328,6 @@ function renderPaymentMethod() {
               <span class="detail-label">${detail.label}</span>
               <div class="detail-value-wrap">
                 <span class="detail-value" id="detail-${detail.label.replace(/\s/g,'')}">${detail.value || '—'}</span>
-                ${detail.value ? `
-                 ` : ''}
               </div>
             </div>
           `).join('')}
@@ -456,7 +454,7 @@ async function markAsPaid() {
     console.error('Mark-as-paid failed:', err);
     SAS.toast.error(err.message || 'Error. Please try again.');
     btn.disabled = false;
-    btn.textContent = 'I Have Paid (Submit Without Proof)';
+    btn.textContent = 'I Have Paid (Submit Without Receipt)';
   }
 }
 
