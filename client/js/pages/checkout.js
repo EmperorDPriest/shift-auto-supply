@@ -153,16 +153,6 @@ function showMethodDetails(methodId) {
     : '';
 }
 
-  // Inject below the payment list
-  let hint = document.getElementById('paymentMethodHint');
-  if (!hint) {
-    hint = document.createElement('div');
-    hint.id = 'paymentMethodHint';
-    document.getElementById('paymentMethodsList')?.after(hint);
-  }
-  hint.innerHTML = detailsHtml;
-}
-
 // ── Navigation ────────────────────────────────────────────
 function goToPayment() {
   const name    = document.getElementById('shipName')?.value?.trim();
