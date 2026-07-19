@@ -238,14 +238,31 @@ function openOrderModal(order) {
   document.getElementById('modalTitle').textContent = `Order ${order.orderNumber}`;
   document.getElementById('modalBody').innerHTML = `
     <!-- Order summary -->
-    <div style="background:var(--bg-elevated);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5)">
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);font-size:13px">
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Customer</div><div style="font-weight:700">${order.shipping?.name||'—'}</div></div>
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Email</div><div style="font-weight:600;word-break:break-all">${order.shipping?.email||order.guestEmail||'—'}</div></div>
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Total</div><div style="font-weight:700;color:var(--blue)">${SAS.utils.formatPrice(order.total)}</div></div>
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Payment Method</div><div style="font-weight:600;text-transform:capitalize">${order.paymentMethod}</div></div>
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Date</div><div style="font-weight:600">${SAS.utils.formatDateTime(order.createdAt)}</div></div>
-        <div><div style="color:var(--text-muted);margin-bottom:3px">Country</div><div style="font-weight:600">${order.shipping?.country||'—'}</div></div>
+<div style="background:var(--bg-elevated);border-radius:var(--radius-lg);padding:var(--space-4);margin-bottom:var(--space-5)">
+      <div style="font-size:13px">
+
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);margin-bottom:var(--space-4)">
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Customer</div><div style="font-weight:700">${order.shipping?.name||'—'}</div></div>
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Email</div><div style="font-weight:600;word-break:break-all">${order.shipping?.email||order.guestEmail||'—'}</div></div>
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Phone</div><div style="font-weight:600">${order.shipping?.phone||'—'}</div></div>
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Total</div><div style="font-weight:700;color:var(--blue)">${SAS.utils.formatPrice(order.total)}</div></div>
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Payment</div><div style="font-weight:600;text-transform:capitalize">${order.paymentMethod}</div></div>
+          <div><div style="color:var(--text-muted);margin-bottom:3px">Date</div><div style="font-weight:600">${SAS.utils.formatDateTime(order.createdAt)}</div></div>
+        </div>
+
+        <div style="background:var(--blue-50);border:1px solid var(--blue-100);border-radius:var(--radius-md);padding:var(--space-4)">
+          <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:var(--blue);margin-bottom:var(--space-3)">
+            📦 Shipping Address
+          </div>
+          <div style="font-weight:600;line-height:1.9;color:var(--text-primary);font-size:13px">
+            ${order.shipping?.name||''}<br>
+            ${order.shipping?.street||'—'}<br>
+            ${order.shipping?.city||''}${order.shipping?.state ? ', ' + order.shipping.state : ''}${order.shipping?.zip ? ' ' + order.shipping.zip : ''}<br>
+            ${order.shipping?.country||''}
+          </div>
+          ${order.shipping?.phone ? `<div style="margin-top:var(--space-2);font-size:13px;color:var(--text-secondary)">📞 ${order.shipping.phone}</div>` : ''}
+        </div>
+
       </div>
     </div>
 
