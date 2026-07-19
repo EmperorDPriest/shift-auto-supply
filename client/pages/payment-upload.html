@@ -277,12 +277,14 @@ document.addEventListener('DOMContentLoaded', async () => {
     `/pages/order-tracking.html?order=${pendingOrder.orderNumber}`;
 
   // Fetch full payment method details including account values
-    try {
-      const methodRes = await SAS.api.get(`/payments/methods/for-order/${pendingOrder.orderId}`);
-      pendingOrder.paymentMethodFull = methodRes.data;
-    } catch (e) {
-      pendingOrder.paymentMethodFull = null;
-    }
+  try {
+    const methodRes = await fetch(`${window.ENV.API_URL}/payments/methods/for-order/${pendingOrder.orderId}`);
+    if (!methodRes.ok) throw new Error('Failed to fetch method');
+    const methodData = await methodRes.json();
+    pendingOrder.paymentMethodFull = methodData.data;
+  } catch (e) {
+    pendingOrder.paymentMethodFull = null;
+  }
   
     renderPaymentMethod();
   
