@@ -276,9 +276,16 @@ document.addEventListener('DOMContentLoaded', async () => {
   document.getElementById('trackOrderLink').href =
     `/pages/order-tracking.html?order=${pendingOrder.orderNumber}`;
 
-  // Render payment method details
-  renderPaymentMethod();
-
+  // Fetch full payment method details including account values
+    try {
+      const methodRes = await SAS.api.get(`/payments/methods/for-order/${pendingOrder.orderId}`);
+      pendingOrder.paymentMethodFull = methodRes.data;
+    } catch (e) {
+      pendingOrder.paymentMethodFull = null;
+    }
+  
+    renderPaymentMethod();
+  
   // Drag and drop
   const zone = document.getElementById('uploadZone');
   zone.addEventListener('dragover', e => { e.preventDefault(); zone.classList.add('drag-over'); });
@@ -295,27 +302,39 @@ function renderPaymentMethod() {
   const container = document.getElementById('paymentMethodDisplay');
   if (!pendingOrder || !container) return;
 
-  const { paymentMethod, paymentMethods } = pendingOrder;
-  const method = paymentMethods?.find(m => m.name === paymentMethod?.name) ||
-    paymentMethods?.[0];
+  const method = pendingOrder.paymentMethodFull;
 
   if (!method) {
-    container.innerHTML = `<div class="alert alert-info">Please contact support for payment details.</div>`;
+    container.innerHTML = `
+      <div class="method-display-card">
+        <div style="padding:var(--space-4);font-size:13px;color:var(--text-secondary)">
+          Payment details could not be loaded. Please contact us on
+          <a href="https://www.facebook.com/share/1SoYSJPkMu/" target="_blank" rel="noopener"
+            style="color:var(--blue);font-weight:700">Facebook</a>
+          with your order number <strong>${pendingOrder.orderNumber}</strong>.
+        </div>
+      </div>`;
     return;
   }
 
-  const accountDetails = method.accountDetails || [];
+  const accountDetails = (method.accountDetails || []).filter(d => d.value);
 
   container.innerHTML = `
     <div class="method-display-card">
       <div class="method-display-header">
         <div style="display:flex;align-items:center;gap:12px">
-          <div class="payment-card-icon" style="width:48px;height:48px;background:var(--blue-50);border-radius:var(--radius-md);display:flex;align-items:center;justify-content:center;color:var(--blue)">
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="5" y="2" width="14" height="20" rx="2" ry="2"/><line x1="12" y1="18" x2="12.01" y2="18"/></svg>
+          <div style="width:48px;height:48px;background:var(--blue-50);border-radius:var(--radius-md);
+            display:flex;align-items:center;justify-content:center;color:var(--blue)">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <rect x="5" y="2" width="14" height="20" rx="2"/><line x1="12" y1="18" x2="12.01" y2="18"/>
+            </svg>
           </div>
           <div>
-            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600">Pay via</div>
-            <div style="font-size:18px;font-weight:800;font-family:var(--font-head)">${method.displayName}</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;
+              letter-spacing:0.08em;font-weight:600">Transfer via</div>
+            <div style="font-size:18px;font-weight:800;font-family:var(--font-head)">
+              ${method.displayName}
+            </div>
           </div>
         </div>
         <span class="badge badge-green" style="font-size:11px">Active</span>
@@ -323,20 +342,47 @@ function renderPaymentMethod() {
 
       ${accountDetails.length ? `
         <div class="method-account-details">
+          <div style="font-size:12px;font-weight:700;text-transform:uppercase;
+            letter-spacing:0.06em;color:var(--text-muted);margin-bottom:var(--space-3)">
+            Transfer Details
+          </div>
           ${accountDetails.map(detail => `
             <div class="account-detail-row">
               <span class="detail-label">${detail.label}</span>
               <div class="detail-value-wrap">
-                <span class="detail-value" id="detail-${detail.label.replace(/\s/g,'')}">${detail.value || '—'}</span>
+                <span class="detail-value"
+                  style="user-select:all;cursor:text;font-weight:700"
+                  title="Tap and hold to select, then copy">
+                  ${detail.value}
+                </span>
               </div>
             </div>
           `).join('')}
+          <p style="font-size:11px;color:var(--text-muted);margin-top:var(--space-3)">
+            Tap and hold the value to select it, then copy.
+          </p>
         </div>
-      ` : ''}
+      ` : `
+        <div style="padding:var(--space-4)">
+          <div class="alert alert-info">
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+              <line x1="12" y1="16" x2="12.01" y2="16"/>
+            </svg>
+            <div>Transfer details will be sent to your email. You can also
+              <a href="https://www.facebook.com/share/1SoYSJPkMu/" target="_blank" rel="noopener"
+                style="color:var(--blue);font-weight:700">message us on Facebook</a>.
+            </div>
+          </div>
+        </div>
+      `}
 
       ${method.instructions ? `
         <div class="method-instructions">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/>
+            <line x1="12" y1="16" x2="12.01" y2="16"/>
+          </svg>
           <p>${method.instructions}</p>
         </div>
       ` : ''}
