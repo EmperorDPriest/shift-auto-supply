@@ -255,8 +255,9 @@ document.addEventListener('DOMContentLoaded', async () => {
       if (m) {
         // fetch full details (may include account values when active)
         try {
-          const full = await SAS.api.get(`/payments/methods/for-order/${orderId}`);
-          pendingOrder.paymentMethods = [full.data];
+          const fullRes = await fetch(`${window.ENV.API_URL}/payments/methods/for-order/${orderId}`);
+          const fullData = await fullRes.json();
+          pendingOrder.paymentMethods = [fullData.data];
         } catch (err) {
           // fallback to public method data
           pendingOrder.paymentMethods = [m];
