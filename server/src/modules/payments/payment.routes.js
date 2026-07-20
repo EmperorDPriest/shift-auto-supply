@@ -1,5 +1,5 @@
 import express from 'express';
-import { getPublicMethods, getMethods, updateMethod, getMethodForOrder } from './payment.controller.js';
+import { getPublicMethods, getMethods,getMethodDetails, updateMethod, getMethodForOrder } from './payment.controller.js';
 import { authenticate, authorize } from '../../middleware/auth.middleware.js';
 
 const router = express.Router();
