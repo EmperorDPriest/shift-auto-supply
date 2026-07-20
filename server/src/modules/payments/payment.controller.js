@@ -45,3 +45,17 @@ export const updateMethod = asyncHandler(async (req, res) => {
   await method.save();
   return ApiResponse.success(res, method, 'Payment method updated');
 });
+
+// Public: Get full payment method details for a placed order
+export const getMethodForOrder = asyncHandler(async (req, res) => {
+  const { orderId } = req.params;
+
+  const Order = (await import('../orders/order.model.js')).default;
+  const order = await Order.findById(orderId).select('paymentMethod _id').lean();
+  if (!order) throw ApiError.notFound('Order not found');
+
+  const method = await PaymentMethod.findOne({ name: order.paymentMethod }).lean();
+  if (!method) throw ApiError.notFound('Payment method not found');
+
+  return ApiResponse.success(res, method);
+});
