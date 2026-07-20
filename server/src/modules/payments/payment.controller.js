@@ -54,7 +54,7 @@ export const getMethodForOrder = asyncHandler(async (req, res) => {
   const order = await Order.findById(orderId).select('paymentMethod _id').lean();
   if (!order) throw ApiError.notFound('Order not found');
 
-  const method = await PaymentMethod.findOne({ name: order.paymentMethod }).lean();
+  const method = await PaymentMethod.findOne({ name: order.paymentMethod }).select('+accountDetails.value').lean();
   if (!method) throw ApiError.notFound('Payment method not found');
 
   return ApiResponse.success(res, method);
