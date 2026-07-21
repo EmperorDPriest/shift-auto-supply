@@ -2,6 +2,7 @@ import { asyncHandler } from '../../utils/asyncHandler.js';
 import { ApiResponse } from '../../utils/ApiResponse.js';
 import { ApiError } from '../../utils/ApiError.js';
 import Order from './order.model.js';
+import { sendNewOrderNotification, sendOrderConfirmationToCustomer } from '../../utils/email.js';
 import Product from '../products/product.model.js';
 import { uploadToCloudinary } from '../../middleware/upload.middleware.js';
 import { pipeline } from 'stream/promises';
