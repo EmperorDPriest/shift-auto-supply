@@ -67,6 +67,10 @@ export const createOrder = asyncHandler(async (req, res) => {
     statusHistory: [{ status: 'pending', note: 'Order placed' }],
   });
 
+  // Send email notifications (non-blocking — won't fail the order if email fails)
+  sendNewOrderNotification(order);
+  sendOrderConfirmationToCustomer(order);
+  
   return ApiResponse.created(res, {
     orderId:     order._id,
     orderNumber: order.orderNumber,
