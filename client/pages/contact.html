@@ -122,17 +122,38 @@ document.getElementById('yr').textContent = new Date().getFullYear();
 async function submitContact(e) {
   e.preventDefault();
   const btn = document.getElementById('contactBtn');
-  btn.disabled = true; btn.textContent = 'Sending…';
-  await new Promise(r => setTimeout(r, 1200));
-  document.getElementById('contactForm').innerHTML = `
-    <div style="text-align:center;padding:var(--space-8)">
-      <div style="width:64px;height:64px;background:var(--blue-50);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);color:var(--blue)">
-        <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+  btn.disabled = true;
+  btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" style="animation:spin .7s linear infinite"><line x1="12" y1="2" x2="12" y2="6"/><line x1="12" y1="18" x2="12" y2="22"/><line x1="4.93" y1="4.93" x2="7.76" y2="7.76"/><line x1="16.24" y1="16.24" x2="19.07" y2="19.07"/><line x1="2" y1="12" x2="6" y2="12"/><line x1="18" y1="12" x2="22" y2="12"/><line x1="4.93" y1="19.07" x2="7.76" y2="16.24"/><line x1="16.24" y1="7.76" x2="19.07" y2="4.93"/></svg> Sending…`;
+
+  try {
+    const res = await fetch(`${window.ENV.API_URL}/contact`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name:        document.getElementById('cName').value.trim(),
+        email:       document.getElementById('cEmail').value.trim(),
+        subject:     document.getElementById('cSubject').value,
+        orderNumber: document.getElementById('cOrderNum').value.trim(),
+        message:     document.getElementById('cMessage').value.trim(),
+      }),
+    });
+
+    if (!res.ok) throw new Error('Failed to send');
+
+    document.getElementById('contactForm').innerHTML = `
+      <div style="text-align:center;padding:var(--space-8)">
+        <div style="width:64px;height:64px;background:var(--blue-50);border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto var(--space-4);color:var(--blue)">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="20 6 9 17 4 12"/></svg>
+        </div>
+        <h3 style="font-size:20px;font-weight:800;margin-bottom:var(--space-3)">Message Sent!</h3>
+        <p style="color:var(--text-secondary);font-size:15px">Thank you for reaching out. We'll get back to you within 2–4 hours at the email you provided.</p>
       </div>
-      <h3 style="font-size:20px;font-weight:800;margin-bottom:var(--space-3)">Message Sent!</h3>
-      <p style="color:var(--text-secondary);font-size:15px">Thank you for reaching out. We'll get back to you within 2–4 hours at the email you provided.</p>
-    </div>
-  `;
+    `;
+  } catch (err) {
+    btn.disabled = false;
+    btn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Send Message`;
+    alert('Failed to send message. Please try again or message us directly on Facebook.');
+  }
 }
 </script>
 </body>
