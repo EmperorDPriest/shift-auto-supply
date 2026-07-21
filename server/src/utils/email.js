@@ -21,7 +21,7 @@ export async function sendNewOrderNotification(order) {
   await resend.emails.send({
     from: FROM,
     to:   OWNER,
-    subject: `🛒 New Order — ${order.orderNumber} ($${order.total.toFixed(2)})`,
+    subject: `New Order Received: ${order.orderNumber}`,
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
         <div style="background:#0066CC;padding:24px 32px;border-radius:8px 8px 0 0">
@@ -66,7 +66,11 @@ export async function sendOrderConfirmationToCustomer(order) {
     from:     FROM,
     to:       customerEmail,
     reply_to: FROM,
-    subject:  `Order Confirmed — ${order.orderNumber} — Shift Auto Supply`,
+    subject: `Your order ${order.orderNumber} is confirmed`,
+    headers: {
+      'List-Unsubscribe': `<mailto:support@bmwshiftauto.store?subject=unsubscribe>`,
+      'X-Entity-Ref-ID': order.orderNumber,
+    },
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
         <div style="background:#0066CC;padding:24px 32px;border-radius:8px 8px 0 0">
@@ -127,6 +131,9 @@ export async function sendContactFormToOwner({ name, email, subject, orderNumber
     to:       OWNER,
     reply_to: email,
     subject:  `Contact Form: ${subject} — ${name}`,
+    headers: {
+      'X-Entity-Ref-ID': `contact-${Date.now()}`,
+    },
     html: `
       <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;color:#1a1a1a">
         <div style="background:#1a1a2e;padding:24px 32px;border-radius:8px 8px 0 0">
