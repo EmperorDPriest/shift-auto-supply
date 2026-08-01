@@ -55,12 +55,13 @@
     .stars-input { display:flex; gap:4px; margin-bottom:var(--space-4); }
     .star-input { cursor:pointer; color:var(--neutral-300); transition:color var(--transition-fast); }
     .star-input:hover, .star-input.active { color:#F59E0B; }
+    .pdp-gallery, .pdp-info { min-width: 0; }
     @media(max-width:900px){   .pdp-layout { display:block !important; grid-template-columns:unset; }   .pdp-gallery { position:static; }   .pdp-gallery, .pdp-info { width:100%; max-width:100%; } }
     @media(max-width:480px){ .pdp-actions{flex-direction:column;} }
 
     @media(max-width:900px){
   /* Stops any single unbreakable child from stretching the 1fr column */
-  .pdp-gallery, .pdp-info, .pdp-meta, .pdp-price-block,
+  .pdp-meta, .pdp-price-block,
   .pdp-actions, .pdp-compat { min-width: 0; }
 
   /* Long titles/SKUs break instead of forcing width */
