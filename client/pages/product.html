@@ -292,7 +292,7 @@ async function loadProduct() {
     loadReviews(currentProduct._id);
     updateMeta(currentProduct);
     document.getElementById('productSkeleton').style.display = 'none';
-    document.getElementById('productContent').style.display  = 'grid';
+    document.getElementById('productContent').style.removeProperty('display');
     saveRecentlyViewed(currentProduct);
   } catch {
     document.getElementById('productSkeleton').innerHTML = `<div style="grid-column:1/-1;text-align:center;padding:80px;color:var(--text-muted)">
