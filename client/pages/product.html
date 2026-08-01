@@ -72,15 +72,32 @@
   /* Safety net: prevents page-wide horizontal scroll even if something else slips through */
   body { overflow-x: hidden; }
 }
-@media (max-width:768px) {
+
+@media (max-width: 768px) {
+  /* Title needs room — float button sits at far right */
+  .pdp-title {
+    padding-right: 54px;
+  }
+
+  /* Meta row badges need room */  
+  .pdp-meta {
+    padding-right: 54px;
+  }
+
+  /* Tabs need room so Reviews tab is not hidden behind button */
+  .pdp-tabs {
+    padding-right: 54px;
+  }
+
+  /* Move float button slightly to minimize overlap */
   .float-support {
     bottom: max(100px, calc(88px + env(safe-area-inset-bottom)));
-    right: var(--space-3);
-    width: 42px;
-    height: 42px;
+    right: 8px;
+    width: 40px;
+    height: 40px;
   }
 }
-
+    
 @media (max-width:480px) {
   .pdp-main-img {
     aspect-ratio: 4/3;
