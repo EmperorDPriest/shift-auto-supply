@@ -12,6 +12,79 @@
   <link rel="stylesheet" href="/css/components.css">
   <link rel="stylesheet" href="/css/pages/payment.css">
   <script>window.ENV = { API_URL: `https://shift-auto-api.onrender.com/api/v1` };</script>
+  <style>
+  /* ── Payment page mobile fixes ─────────────────────── */
+  @media (max-width: 768px) {
+    .payment-grid {
+      grid-template-columns: 1fr !important;
+      display: block;
+    }
+    .payment-instructions-col,
+    .payment-upload-col {
+      width: 100%;
+      min-width: 0;
+      max-width: 100%;
+    }
+    .payment-container {
+      padding-left: var(--space-4);
+      padding-right: var(--space-4);
+    }
+    .method-display-card {
+      overflow: hidden;
+    }
+    .method-display-header {
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .account-detail-row {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: var(--space-2);
+    }
+    .detail-value {
+      word-break: break-all;
+      overflow-wrap: break-word;
+      max-width: 100%;
+    }
+    /* Order number in memo reminder — stop it overflowing */
+    .amount-reminder {
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+    .amount-reminder strong {
+      word-break: break-all;
+      overflow-wrap: break-word;
+    }
+    /* Success overlay card */
+    .success-card {
+      width: 100%;
+      max-width: 100%;
+      margin: 0;
+      border-radius: var(--radius-lg);
+      padding: var(--space-6) var(--space-4);
+    }
+    .success-overlay {
+      padding: var(--space-4);
+      align-items: flex-start;
+    }
+    /* Order confirmed banner */
+    .order-confirmed-inner {
+      flex-wrap: wrap;
+      gap: var(--space-3);
+    }
+    .order-confirmed-inner p {
+      word-break: break-word;
+    }
+    /* Upload zone */
+    .upload-zone {
+      min-height: 140px;
+    }
+    /* Buttons full width */
+    .upload-card .btn {
+      width: 100%;
+    }
+  }
+</style>
 </head>
 <body>
 
