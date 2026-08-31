@@ -376,7 +376,7 @@
   .hero-slide { height: 360px; }
   .hero-stats { gap: var(--space-5); }
   .hero-stat .num { font-size: 18px; }
-  .hero-search-mobile { display: block; }
+  .hero-search-mobile { display: none; }
   .hero-swiper .swiper-button-prev,
   .hero-swiper .swiper-button-next { display: none; }
   .product-grid { grid-template-columns: repeat(2, 1fr); gap: var(--space-4); }
