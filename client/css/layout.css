@@ -93,7 +93,7 @@
   white-space: nowrap;
 }
 @media (max-width: 480px) {
-  .site-logo-name .brand { font-size: 12px; }
+  .site-logo-name .brand { font-size: 13px; }
   .site-logo-name .tagline { display: none; }
 }
 @media (max-width: 360px) {
