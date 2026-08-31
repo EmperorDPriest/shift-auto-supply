@@ -97,7 +97,7 @@
   .site-logo-name .tagline { display: none; }
 }
 @media (max-width: 360px) {
-  .site-logo-name .brand { font-size: 11px; }
+  .site-logo-name .brand { font-size: 12px; }
 }
 /* Header search */
 .header-search {
